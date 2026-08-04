@@ -1,0 +1,70 @@
+# ------------------------------------------------------------------------------
+# Local configuration
+# ------------------------------------------------------------------------------
+# config.R holds machine-specific absolute paths and is never committed.
+# Copy config.example.R to config.R and edit it for your machine.
+config.R
+
+# ------------------------------------------------------------------------------
+# Data
+# ------------------------------------------------------------------------------
+# Raw rasters and intermediate outputs are far too large for version control and
+# are all reproducible from the sources documented in README.md.
+#
+# Two exceptions are versioned, because they are small, redistributable, and
+# tedious to reconstruct: the capitals reference list, and the city-level ACS
+# aggregates that make the ACS case study runnable without an IPUMS account.
+# See data/README.md.
+data/*
+!data/README.md
+!data/reference/
+!data/acs/
+
+*.parquet
+*.tif
+*.tif.gz
+*.gpkg
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.sbn
+*.sbx
+
+# ------------------------------------------------------------------------------
+# Generated outputs
+# ------------------------------------------------------------------------------
+outputs/figures/*
+outputs/tables/*
+!outputs/figures/.gitkeep
+!outputs/tables/.gitkeep
+
+# ------------------------------------------------------------------------------
+# R
+# ------------------------------------------------------------------------------
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+renv/library/
+renv/staging/
+
+# ------------------------------------------------------------------------------
+# Python
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ------------------------------------------------------------------------------
+# OS and editors
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*~
