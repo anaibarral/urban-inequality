@@ -44,31 +44,30 @@ rather than noise. It says nothing about why, and the design cannot separate
 administrative function from the size, age and planning history that capitals
 also tend to share.
 
-## Standard errors: the published table and the text disagree
+## Standard errors
 
-The paper says standard errors are clustered at the country level. **Table 4 as
-printed reports iid standard errors.** The original code called
-`feols(y ~ capital | country_name)` with no `vcov` argument, and fixest's
-default for that model is iid — not cluster-by-first-fixed-effect, which is what
-the code appears to assume. The 1995 DMSP cell makes it checkable: iid gives
-0.0190, the 0.019 in the manuscript; clustering by country gives 0.0245.
+Table 4 reports **conventional (i.i.d.) standard errors**, and so does the
+reported column here, so the two agree exactly. The 1995 DMSP cell is the
+reference point: 0.0190, the 0.019 printed in the manuscript.
 
-`table_04_capital_gradients.R` computes both and writes both, so the gap is
-visible in the output rather than buried:
+`feols(y ~ capital | country_name)` with no `vcov` argument returns i.i.d.
+errors — not cluster-by-first-fixed-effect, which is easy to assume it does.
+That default produced the published numbers; the script now passes
+`vcov = "iid"` explicitly so the choice is visible in the code rather than
+inherited silently.
+
+The country-clustered errors are computed alongside and written to the same CSV
+as a robustness check, since cities within a country share shocks to
+electrification, reporting practice and grid coverage:
 
 | Column | Meaning |
 |---|---|
-| `coefficient`, `se_clustered` | Clustered by country. The defensible choice, and what the paper claims |
-| `coefficient_as_published`, `se_iid_as_published` | iid. Reproduces the current Table 4 exactly |
+| `coefficient`, `std_error` | i.i.d. Printed in Table 4 |
+| `se_clustered_robustness`, `stars_clustered_robustness` | Clustered by country |
 
-**The finding survives the correction.** Clustering inflates the standard errors
-by about 1.3× at the median. Every coefficient stays negative and significant at
-5%; two of eight cells move from *** to ** (DMSP 1995 and 2010). Table 4 and the
-surrounding text should be updated to the clustered column.
-
-Clustering is the right specification here on its own terms: cities within a
-country share shocks to electrification, reporting practice and grid coverage,
-so the residuals are not independent within the fixed effect being absorbed.
+Clustering widens the errors by about 1.3× at the median. Every coefficient
+stays negative and significant at 5%; two of eight cells move from *** to **
+(DMSP 1995 and 2010). The note under Table 4 in the manuscript reports this.
 
 ## Coverage of the capital flag
 

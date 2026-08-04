@@ -226,12 +226,6 @@ install.packages(c(
 Surfaced while assembling this repository, and verified by running the scripts
 against the published dataset. Listed here so they are not lost.
 
-- **Table 4's standard errors are iid, not clustered by country,** contrary to
-  what the text states. The original call left `vcov` at fixest's default, which
-  is iid for this model. Clustering inflates the standard errors by about 1.3×;
-  every coefficient stays negative and significant at 5%, and two of eight cells
-  move from *** to **. `table_04_capital_gradients.R` now reports both. See
-  [the capitals README](src/03_case_study_capitals/README.md).
 - **The capital indicator misses 19 countries, including India.** The UCDB
   writes `Delhi [New Delhi]` where the reference list says `New Delhi`, so the
   exact name match fails and the capital enters Table 4 as a control. Tanzania
@@ -240,20 +234,17 @@ against the published dataset. Listed here so they are not lost.
 - **Figure 2's caption describes kernel density estimates.** The panels are
   ranked coefficient plots with confidence intervals. Either the caption or the
   figure needs to change.
-- **The GPWv4 citation points at the wrong product.** The bibliography cites
-  *Population Count, Revision 11* (`10.7927/H4JW8BX5`); the pipeline reads
-  *Population Density, Revision 11* (`10.7927/H49C6VHW`).
-- **GPWv3 has no bibliography entry** despite being cited in the text as the
-  1995 source.
-- **"Two independent satellite sources" overstates the case.** For 2014–2020 the
-  extended DMSP-like series is itself simulated from VIIRS, so in 2015 and 2020
-  — precisely the comparison years — the two are not independent. This bears on
-  how Table 6 Panel C should be read.
 - **The ACS Gini uses `unbiased = TRUE` while the luminosity Gini uses
   `unbiased = FALSE`,** against the paper's statement that identical functional
   forms are applied on both sides. The effect is fourth-decimal on ACS sample
   sizes; the original setting is preserved so the repository reproduces the
   published numbers.
+
+Resolved in the current manuscript draft: the GPWv4 citation now points at
+*Population Density, Revision 11*; GPWv3 has its own bibliography entry; the
+description of the two NTL sources no longer calls them independent; the
+treatment of city-years with no luminosity matches what the code does; and
+Table 4 states that its standard errors are conventional.
 
 ---
 
