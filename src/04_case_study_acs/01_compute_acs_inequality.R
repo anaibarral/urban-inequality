@@ -25,14 +25,12 @@
 # Theil but keeping them in the Gini.
 #
 # A NOTE ON THE GINI ESTIMATOR. `unbiased = TRUE` applies the n/(n-1)
-# small-sample correction, whereas the luminosity Gini in
-# src/R/inequality.R uses `unbiased = FALSE`. The published results were
-# produced this way and the setting is preserved here so that the repository
-# reproduces the paper. The two differ by a factor of n/(n-1); on ACS city
-# samples of thousands of households that is a fourth-decimal effect, far below
-# the precision reported in Table 5. It is nonetheless an inconsistency with the
-# paper's statement that the same functional forms are used on both sides, and
-# is flagged here rather than silently reconciled.
+# small-sample correction, whereas the luminosity Gini in src/R/inequality.R
+# uses `unbiased = FALSE`. The published results were produced this way and the
+# setting is preserved here so that the repository reproduces them exactly. The
+# two differ by a factor of n/(n-1); on ACS city samples of thousands of
+# households that is a fourth-decimal effect, far below the precision reported
+# in Table 5.
 # ==============================================================================
 
 source(here::here("src", "R", "setup.R"))

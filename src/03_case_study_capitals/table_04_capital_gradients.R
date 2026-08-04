@@ -19,24 +19,26 @@
 # sit in richer and more electrified countries on average, so a raw comparison
 # would mostly recover cross-country differences.
 #
-# STANDARD ERRORS. Table 4 reports conventional (i.i.d.) standard errors, and
-# the reported column here is i.i.d. so that the two agree exactly. The 1995
-# DMSP cell is the reference point: 0.0190, the 0.019 printed in the manuscript.
+# STANDARD ERRORS ARE CLUSTERED AT THE COUNTRY LEVEL, matching Table 4.
 #
-# `feols(y ~ capital | country_name)` with no vcov argument returns i.i.d.
-# errors, not cluster-by-first-fixed-effect. That is what produced the published
-# numbers, and it is now stated explicitly through `vcov = "iid"` rather than
-# left to a default that is easy to misread.
+# Cities within a country share shocks to electrification, reporting practice
+# and grid coverage, so residuals are not independent within the fixed effect
+# being absorbed. Between 155 and 157 clusters enter each yearly regression,
+# comfortably above the range where the clustered variance estimator becomes
+# unreliable.
 #
-# The country-clustered errors are computed alongside and written to the same
-# CSV, because they are the natural robustness check: cities within a country
-# share shocks to electrification, reporting and grid coverage. Clustering
-# widens the errors by roughly a third. Every coefficient stays negative and
-# significant at 5%, and two of eight cells move from *** to ** (DMSP 1995 and
-# 2010). The note under Table 4 in the manuscript says as much.
+# `cluster = ~ country_name` is passed explicitly. Left to its default,
+# `feols(y ~ capital | country_name)` returns i.i.d. errors rather than
+# clustering on the first fixed effect, which is easy to assume it does.
 #
-#   se_iid         reported, and printed in Table 4
-#   se_clustered   robustness, reported in the CSV and in the console summary
+# The i.i.d. errors are computed alongside and written to the same CSV as a
+# reference. Clustering widens the errors by about 1.3x at the median, ranging
+# from 1.06x to 1.36x. Coefficients are identical either way; every one stays
+# negative and significant at 5%, and two of the eight cells sit at the 5%
+# rather than the 1% level under clustering (DMSP 1995 and 2010).
+#
+#   se_clustered   reported, and printed in Table 4
+#   se_iid         reference, reported in the CSV and in the console summary
 #
 # WHY N IS SMALLER THAN THE COUNT OF ESTIMABLE GRADIENTS. Countries represented
 # by a single urban centre carry no within-country variation and are absorbed
@@ -93,7 +95,10 @@ tidy_both <- function(pair) {
     p_iid         = iid[["Pr(>|t|)"]],
     conf.low      = ci[[1]],
     conf.high     = ci[[2]],
-    n_obs         = nobs(pair$clustered)
+    n_obs         = nobs(pair$clustered),
+    # Countries surviving singleton removal: the clusters the variance
+    # estimator actually uses. Reported so that too-few-clusters is visible.
+    n_clusters    = unname(pair$clustered$fixef_sizes[["country_name"]])
   )
 }
 
@@ -135,13 +140,14 @@ results <- pmap_dfr(specifications, function(source, outcome, years, specificati
 table_04 <- results |>
   transmute(
     source, specification, year,
-    coefficient  = sprintf("%.3f%s", estimate, stars_iid),
-    std_error    = sprintf("(%.3f)", se_iid),
-    se_clustered_robustness = sprintf("(%.3f)", se_clustered),
-    stars_clustered_robustness = stars_clustered,
+    coefficient  = sprintf("%.3f%s", estimate, stars_clustered),
+    std_error    = sprintf("(%.3f)", se_clustered),
+    se_iid_reference    = sprintf("(%.3f)", se_iid),
+    stars_iid_reference = stars_iid,
     conf_low    = round(conf.low, 4),
     conf_high   = round(conf.high, 4),
     n_obs,
+    n_clusters,
     country_fe  = "X"
   ) |>
   arrange(desc(specification), source, year)
@@ -152,22 +158,27 @@ for (src in c("DMSP", "VIIRS")) {
               if (src == "DMSP") "A" else "B", src))
   table_04 |>
     filter(source == src, specification == "With population control") |>
-    select(year, coefficient, std_error, n_obs, country_fe) |>
+    select(year, coefficient, std_error, n_obs, n_clusters, country_fe) |>
     as.data.frame() |> print(row.names = FALSE)
 }
 
 cat("\n*** p < 0.01; ** p < 0.05; * p < 0.1.\n")
-cat("Conventional (i.i.d.) standard errors, as reported in Table 4.\n")
+cat("Standard errors clustered at the country level, as reported in Table 4.\n")
 
-cat("\n--- Robustness: clustering by country ---\n")
-cat(sprintf("Median SE inflation: %.2fx | still significant at 5%%: %d of %d | all negative: %s\n",
+cat("\n--- Reference: i.i.d. standard errors ---\n")
+cat(sprintf("Median SE inflation from clustering: %.2fx (range %.2f-%.2f)\n",
             median(results$se_clustered / results$se_iid),
+            min(results$se_clustered / results$se_iid),
+            max(results$se_clustered / results$se_iid)))
+cat(sprintf("Clusters per regression: %d to %d | significant at 5%%: %d of %d | all negative: %s\n",
+            min(results$n_clusters), max(results$n_clusters),
             sum(results$p_clustered < 0.05), nrow(results),
             all(results$estimate < 0)))
 
 changed <- results |> filter(stars_clustered != stars_iid)
 if (nrow(changed) > 0) {
-  cat(sprintf("%d of %d cells change significance tier:\n", nrow(changed), nrow(results)))
+  cat(sprintf("%d of %d cells sit at a different significance tier than under i.i.d.:\n",
+              nrow(changed), nrow(results)))
   changed |>
     select(source, specification, year, estimate, stars_iid, stars_clustered) |>
     as.data.frame() |> print(row.names = FALSE)

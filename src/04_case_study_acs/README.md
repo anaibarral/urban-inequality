@@ -63,14 +63,12 @@ the IPUMS missing code and negative incomes are dropped from both, and zero
 incomes are additionally dropped from the Theil, mirroring the exclusion of
 zero-luminosity cells.
 
-One difference remains. The ACS Gini is computed with
-`DescTools::Gini(unbiased = TRUE)` while the luminosity Gini uses
-`unbiased = FALSE`. The published results were produced this way and the setting
-is preserved so the repository reproduces the paper. The two differ by a factor
-of n/(n-1), which on samples of thousands of households is a fourth-decimal
-effect — well below the precision Table 5 reports. It is still an inconsistency
-with the paper's statement that the same functional forms are used on both
-sides, and it is flagged in the script rather than quietly reconciled.
+One estimator setting differs. The ACS Gini is computed with
+`DescTools::Gini(unbiased = TRUE)`, applying the n/(n-1) small-sample
+correction, while the luminosity Gini uses `unbiased = FALSE`. On ACS samples of
+thousands of households the correction is a fourth-decimal effect, well below
+the precision Table 5 reports. The setting is preserved so that the repository
+reproduces the published results exactly.
 
 ## Levels, not logs
 

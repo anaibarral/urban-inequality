@@ -74,7 +74,7 @@ Listed in the order they appear in the paper.
 | Figure 1 — Construction pipeline | — | Not code-generated. An infographic designed in Canva |
 | Table 1 — Variable descriptions | — | Not computed. See the data dictionary in the Dataverse deposit |
 | Table 2 — Data quality summary | `src/02_validation/table_02_data_quality.R` | Also prints every figure quoted in Technical Validation |
-| Figure 2 — Gradient distributions by year | `src/02_validation/figure_02_gradient_distributions.R` | See the caption note below |
+| Figure 2 — Gradient distributions by year | `src/02_validation/figure_02_gradient_distributions.R` | |
 | Table 3 — % negative gradients | `src/02_validation/table_03_negative_gradients.R` | |
 | Table 4 — Capital vs non-capital | `src/03_case_study_capitals/table_04_capital_gradients.R` | Requires `01_build_capital_panel.R` first |
 | Table 5 — Satellite vs census (ACS) | `src/04_case_study_acs/table_05_acs_validation.R` | Requires steps 1 and 2 of that folder |
@@ -92,8 +92,7 @@ reproduces the manuscript:
   completeness, and every completeness percentage.
 - **Table 3** — 86.3 / 85.2 / 86.4 / 85.3 / 84.0 / 84.4 (DMSP) and 84.3 / 85.1
   (VIIRS), with sample sizes from 10,642 to 11,245.
-- **Table 4** — coefficients and sample sizes exactly; standard errors reproduce
-  under the `_as_published` column (see Known issues).
+- **Table 4** — every coefficient, standard error and sample size, both panels.
 - **Table 5** — every coefficient, standard error and R², both panels.
 - **Table 6** — all three panels, N = 65,704 and 22,256.
 
@@ -218,33 +217,6 @@ install.packages(c(
   "ipumsr"
 ))
 ```
-
----
-
-## Known issues in the current manuscript
-
-Surfaced while assembling this repository, and verified by running the scripts
-against the published dataset. Listed here so they are not lost.
-
-- **The capital indicator misses 19 countries, including India.** The UCDB
-  writes `Delhi [New Delhi]` where the reference list says `New Delhi`, so the
-  exact name match fails and the capital enters Table 4 as a control. Tanzania
-  and Nigeria match two capitals each, through case-variant duplicate records.
-  Details in [the capitals README](src/03_case_study_capitals/README.md).
-- **Figure 2's caption describes kernel density estimates.** The panels are
-  ranked coefficient plots with confidence intervals. Either the caption or the
-  figure needs to change.
-- **The ACS Gini uses `unbiased = TRUE` while the luminosity Gini uses
-  `unbiased = FALSE`,** against the paper's statement that identical functional
-  forms are applied on both sides. The effect is fourth-decimal on ACS sample
-  sizes; the original setting is preserved so the repository reproduces the
-  published numbers.
-
-Resolved in the current manuscript draft: the GPWv4 citation now points at
-*Population Density, Revision 11*; GPWv3 has its own bibliography entry; the
-description of the two NTL sources no longer calls them independent; the
-treatment of city-years with no luminosity matches what the code does; and
-Table 4 states that its standard errors are conventional.
 
 ---
 

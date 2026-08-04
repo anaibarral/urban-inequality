@@ -29,14 +29,13 @@ dropping missing values; dropping across all columns at once would require a
 VIIRS value to be present, silently restricting the DMSP panel to 2015 and 2020
 and turning Panel A into a second copy of Panel B on a different sample.
 
-## Two things to know about Figure 2
+## What Figure 2 shows
 
-**The caption in the current manuscript does not match the figure.** It
-describes kernel density estimates. The panels are ranked coefficient plots:
-cities sorted by their estimated gradient, each with a 95% confidence interval,
-against a dashed line at zero. The share of the curve below zero is what Table 3
-tabulates. Either the caption needs correcting or the figure needs replacing
-with an actual density.
+Each panel is one benchmark year. Cities are sorted along the horizontal axis by
+their estimated gradient, each plotted as a point with its 95% confidence
+interval, against a dashed line at zero. Reading left to right traces the whole
+cross-sectional distribution of gradients, and the share lying below zero is
+what Table 3 tabulates.
 
 **Confidence intervals come from the matching specification.** The
 population-controlled panels use intervals from the population-controlled

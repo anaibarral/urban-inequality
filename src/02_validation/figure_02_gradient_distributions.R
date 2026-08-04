@@ -17,11 +17,6 @@
 # gradients, and the share of the curve lying below zero is the quantity
 # tabulated in Table 3.
 #
-# The caption in the current manuscript describes these panels as kernel density
-# estimates. They are not: they are ranked coefficient plots with confidence
-# intervals. The caption needs to be corrected, or the figure replaced with an
-# actual density.
-#
 # Confidence intervals are taken from the gradient table of the SAME
 # specification being plotted. This matters: the population-controlled and
 # unconditional regressions have different standard errors, so pairing
