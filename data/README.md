@@ -2,7 +2,7 @@
 
 Almost all inputs are downloaded rather than versioned: the rasters alone run to
 tens of gigabytes and are reproducible from the sources listed in the main
-README. Two things are small, redistributable and awkward to reconstruct, so
+README. Two things are small, redistributable and tedious to reconstruct, so
 they ship with the repository.
 
 ```
