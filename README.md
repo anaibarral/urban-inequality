@@ -2,11 +2,11 @@
 
 Code to build the Urban Inequality Dataset and to reproduce every exhibit in
 *The Urban Inequality Dataset: A remote-sensing approach to economic disparities
-within cities around the globe* (Morales-Arilla and Ibarra).
+within cities around the globe*.
 
 The dataset is a harmonized panel of intra-urban economic disparity measures for
 **12,315 cities across 182 countries**, over six benchmark years between **1995
-and 2020** — 70,024 city-year observations. It combines satellite nighttime
+and 2020** with 70,024 city-year observations. It combines satellite nighttime
 lights with gridded population estimates inside functionally defined urban
 boundaries, and reports three complementary measures per city-year: a Gini
 coefficient, a Theil index, and centre-periphery luminosity gradients estimated
@@ -178,7 +178,7 @@ case studies without any download:
 | `data/reference/country-capitals.csv` | Case study 1, in full |
 | `data/acs/acs_gini_by_city.xlsx`, `acs_theil_by_city.xlsx` | Case study 2, steps 2–3 |
 
-The ACS files are city-level **aggregates** — one row per city-year — computed
+The ACS files are city-level **aggregates** (one row per city-year) computed
 from IPUMS microdata by step 1 of the case study. Publishing aggregates derived
 from IPUMS is permitted; redistributing the extracts is not, and at 2.1 GB they
 would exceed GitHub's file-size limit anyway. So the extracts are not here, and
@@ -188,8 +188,8 @@ request if you want to rebuild them.
 
 **One population raster per year, and only one.** `resolve_rasters_by_year()`
 searches `DIR_POPULATION` recursively and requires exactly one match per
-benchmark year. If two variants of the same year are present — say the
-UN-WPP-adjusted and unadjusted versions — the pipeline stops rather than picking
+benchmark year. If two variants of the same year are present (say the
+UN-WPP-adjusted and unadjusted versions) the pipeline stops rather than picking
 one arbitrarily. This is what keeps the DMSP and VIIRS branches on the same
 population input; see
 [`src/01_data_construction/README.md`](src/01_data_construction/README.md).
