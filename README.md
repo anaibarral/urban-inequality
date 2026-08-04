@@ -14,9 +14,9 @@ with and without population controls.
 
 | | |
 |---|---|
-| **Data** | [Harvard Dataverse, doi:10.7910/DVN/Z7DX3U](https://doi.org/10.7910/DVN/Z7DX3U) (CC0) |
-| **Format** | Single Apache Parquet file, 70,024 × 17 |
-| **Documentation** | Data dictionary and summary statistics, deposited alongside the data |
+| **Data** | [Harvard Dataverse, doi:10.7910/DVN/ECLI7X](https://doi.org/10.7910/DVN/ECLI7X) (CC0) |
+| **Format** | Apache Parquet, 70,024 × 17, with a data dictionary and summary statistics alongside |
+| **Files** | `urban_inequality_dataset_1995_2020.parquet`, `ui_codebook.xlsx`, `ui_summary_stats.xlsx` |
 
 ---
 
@@ -236,7 +236,7 @@ install.packages(c(
                Global Urban Disparities},
   year      = {2026},
   publisher = {Harvard Dataverse},
-  doi       = {10.7910/DVN/Z7DX3U}
+  doi       = {10.7910/DVN/ECLI7X}
 }
 ```
 

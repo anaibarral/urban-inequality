@@ -52,9 +52,7 @@ coverage, so residuals are not independent within the fixed effect being
 absorbed. Each yearly regression uses 155 to 157 clusters, well above the range
 where the clustered variance estimator becomes unreliable.
 
-`cluster = ~ country_name` is passed explicitly. Left to its default,
-`feols(y ~ capital | country_name)` returns i.i.d. errors rather than clustering
-on the first fixed effect, which is easy to assume it does.
+`cluster = ~ country_name` is passed explicitly in every call.
 
 The i.i.d. errors are computed alongside and written to the same CSV as a
 reference:
