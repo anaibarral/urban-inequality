@@ -2,11 +2,11 @@
 
 Code to build the Urban Inequality Dataset and to reproduce every exhibit in
 *The Urban Inequality Dataset: A remote-sensing approach to economic disparities
-within cities around the globe* (Morales-Arilla and Ibarra).
+within cities around the globe*.
 
 The dataset is a harmonized panel of intra-urban economic disparity measures for
 **12,315 cities across 182 countries**, over six benchmark years between **1995
-and 2020** — 70,024 city-year observations. It combines satellite nighttime
+and 2020** with 70,024 city-year observations. It combines satellite nighttime
 lights with gridded population estimates inside functionally defined urban
 boundaries, and reports three complementary measures per city-year: a Gini
 coefficient, a Theil index, and centre-periphery luminosity gradients estimated
