@@ -18,6 +18,11 @@ with and without population controls.
 | **Format** | Apache Parquet, 70,024 × 17, with a data dictionary and summary statistics alongside |
 | **Files** | `urban_inequality_dataset_1995_2020.parquet`, `ui_codebook.xlsx`, `ui_summary_stats.xlsx` |
 
+> The DOI resolves once the Dataverse deposit is published. While the manuscript
+> is under review the deposit is still a draft, and the data can be downloaded
+> without an account from the
+> [reviewer preview link](https://dataverse.harvard.edu/previewurl.xhtml?token=0566f964-c45b-41ef-a52a-40e9b76b37cf).
+
 ---
 
 ## Quick start
