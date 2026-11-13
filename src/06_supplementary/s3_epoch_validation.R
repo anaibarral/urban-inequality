@@ -62,7 +62,8 @@ write_si_table(
   paste0("Proportion of urban center-years with negative luminosity gradients (declining luminosity from ",
          "center to periphery), after controlling for population, computed over observations with estimable ",
          "gradients. Each urban center is measured inside its GHS-UCDB R2024A polygon of the corresponding epoch. ",
-         "DMSP lights and GPW population.")
+         "DMSP lights and GPW population. The epoch panel contains ", int(nrow(d)), " urban center-years for ",
+         int(dplyr::n_distinct(d$city_id)), " urban centers.")
 )
 
 
@@ -194,7 +195,10 @@ write_si_table(
          "urban centers measured inside their GHS-UCDB R2024A polygon of each epoch to census-based inequality ",
          "from the American Community Survey, U.S.\\ cities, 2000--2020. Columns (1)--(3) use ACS Gini as ",
          "dependent variable, and columns (4)--(6) use ACS Theil. Standard errors clustered by city in ",
-         "parentheses. N = ", s3$n_obs[1], " city-year observations. FE = fixed effects. ", STARS_NOTE),
+         "parentheses. N = ", s3$n_obs[1], " city-year observations",
+         if (length(unique(s3$n_obs[s3$spec == 3])) == 1 && s3$n_obs[s3$spec == 3][1] != s3$n_obs[1])
+           sprintf(" (%d in columns 3 and 6)", s3$n_obs[s3$spec == 3][1]) else "",
+         ". FE = fixed effects. ", STARS_NOTE),
   size = "\\small"
 )
 

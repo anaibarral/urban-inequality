@@ -110,7 +110,7 @@ writeLines(c(
   "\\begin{flushleft}",
   paste0("\\footnotesize\\textit{Note:} OLS regression coefficients for the capital city indicator on luminosity ",
          "gradients (with population control) computed with GHS-POP R2023A population, estimated separately for ",
-         "each year, with country fixed effects. The capital indicator is that of Table 4 of the main article. ",
+         "each year, with country fixed effects. The capital indicator is that of Table 4 of the Data Descriptor. ",
          "Standard errors clustered at the country level in parentheses, computed over ",
          min(cap$n_clusters), " to ", max(cap$n_clusters), " clusters depending on the year. ", STARS_NOTE),
   "\\end{flushleft}", "\\end{table}"), file.path(SI_TABLE_DIR, "table_si_ghspop_capital_gradients.tex"), useBytes = TRUE)
@@ -176,8 +176,8 @@ writeLines(c(
   "\\begin{flushleft}",
   paste0("\\footnotesize\\textit{Note:} Panel regression coefficients relating satellite-derived inequality measures ",
          "(NTL Gini and NTL Theil) computed with GHS-POP R2023A population to census-based inequality from the ",
-         "American Community Survey. The ACS measures and the matched cities are those of Table 5 of the main ",
-         "article. Columns (1)--(3) use ACS Gini as dependent variable, and columns (4)--(6) use ACS Theil. ",
+         "American Community Survey. The ACS measures and the matched cities are those of Table 5 of the Data ",
+         "Descriptor. Columns (1)--(3) use ACS Gini as dependent variable, and columns (4)--(6) use ACS Theil. ",
          "Standard errors clustered by city in parentheses. FE = fixed effects. ", STARS_NOTE),
   "\\end{flushleft}", "\\end{table}"), file.path(SI_TABLE_DIR, "table_si_ghspop_acs_validation.tex"), useBytes = TRUE)
 

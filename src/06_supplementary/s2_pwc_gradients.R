@@ -97,7 +97,7 @@ writeLines(c(
   paste0("\\footnotesize\\textit{Note:} OLS regression coefficients for the capital city indicator on luminosity ",
          "gradients (with population control) measured from population-weighted centroids, estimated separately for ",
          "each year, with country fixed effects. The capital indicator and the sample are those of Table 4 of the ",
-         "main article. Standard errors clustered at the country level in parentheses, computed over ",
+         "Data Descriptor. Standard errors clustered at the country level in parentheses, computed over ",
          min(cap$n_clusters), " to ", max(cap$n_clusters), " clusters depending on the year. ", STARS_NOTE),
   "\\end{flushleft}", "\\end{table}"), file.path(SI_TABLE_DIR, "table_si_pwc_capital_gradients.tex"), useBytes = TRUE)
 

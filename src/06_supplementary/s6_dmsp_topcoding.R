@@ -173,13 +173,18 @@ body <- c(
   paste0("$R^2$ within & ", paste(num(sapply(models, function(m) fitstat(m, "wr2")[[1]])), collapse = " & "), " \\\\"),
   "\\bottomrule")
 
+n_sat <- x_sat[, .N, by = year][order(year)]
+
 write_si_table(
   "table_si_topcoding_regressions.tex",
   "VIIRS $-$ DMSP difference and share of top-coded DMSP cells",
   "lcccccc", body,
   paste0("Each observation is a city in 2015 or 2020. The dependent variable is the VIIRS index minus the DMSP ",
          "index. Controls: log number of cells and share of DMSP cells at zero. Columns 2, 3, 5 and 6 exclude the ",
-         "city-years without top-coded cells. Columns 3 and 6 also exclude the 0.5\\% of city-years with the ",
+         "city-years without top-coded cells; ",
+         paste(sprintf("%s%s in %d", int(n_sat$N), c(" cities", rep("", nrow(n_sat) - 1)), n_sat$year),
+               collapse = " and "),
+         " have at least one top-coded cell. Columns 3 and 6 also exclude the 0.5\\% of city-years with the ",
          "highest share of top-coded cells in each year (", sum(n_top$n_drop), " city-years, ",
          paste(unique(n_top$n_drop), collapse = " and "), " per year). Standard errors clustered by country in ",
          "parentheses. ", STARS_NOTE),

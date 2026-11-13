@@ -83,6 +83,12 @@ body <- c(
              "Nightlights Gini (Census Tract)", "Nightlights Theil (Census Tract)"),
   "\\bottomrule")
 
+# Tracts assigned to an urban centre by their interior point, before dropping
+# tracts without population or income (the n_tracts column counts the tracts
+# used in the indices). Logged by s4_build_us_tract_inequality.R ("Tracts
+# assigned"), which needs the downloaded boundaries, so they are kept here.
+TRACTS_ASSIGNED <- c("2010" = 33842, "2020" = 37652)
+
 write_si_table(
   "table_si_tract_validation.tex",
   "Census-based inequality between census tracts vs.\\ nightlights inequality, U.S.\\ urban centers",
@@ -91,7 +97,10 @@ write_si_table(
          "between the census tracts of the urban center (ACS 5-year detailed tables, tracts assigned by their interior ",
          "point), weighted by tract population. Panel A: nightlights Gini or Theil index of the dataset, computed between ",
          "the 1 km cells of the urban center. Panel B: Gini or Theil index of per-capita lights between the same tracts, ",
-         "weighted by tract population. DMSP: 2010, 2015 and 2020. VIIRS: 2015 and 2020. Standard errors clustered by ",
+         "weighted by tract population. DMSP: 2010, 2015 and 2020. VIIRS: 2015 and 2020. The sample covers ",
+         uniqueN(tr$city_id), " U.S.\\ urban centers, with ", int(TRACTS_ASSIGNED[["2010"]]), " tracts assigned in ",
+         "2010 and ", int(TRACTS_ASSIGNED[["2020"]]), " in 2020 (median of ", median(tr$n_tracts),
+         " tracts per urban center, minimum of ", min(tr$n_tracts), "). Standard errors clustered by ",
          "urban center in parentheses. ", STARS_NOTE),
   size = "\\footnotesize\\setlength{\\tabcolsep}{3.5pt}", fit = TRUE)
 
