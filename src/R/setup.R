@@ -34,6 +34,8 @@ source(.config_path)
 
 for (.required in c("DIR_RAW", "DIR_CLEAN", "DIR_OUTPUT", "PATH_UCDB",
                     "DIR_NTL_DMSP", "DIR_NTL_VIIRS", "DIR_POPULATION",
+                    "DIR_GHS_POP", "DIR_GHS_POP_MOLL",
+                    "PATH_UCDB_MTUC", "PATH_UCDB_2024",
                     "DIR_ACS_IPUMS", "PATH_CAPITALS", "N_CORES")) {
   if (!exists(.required)) {
     stop("config.R does not define ", .required,
@@ -66,14 +68,68 @@ PATHS <- list(
   theil_dmsp       = file.path(DIR_CLEAN, "theil", "theil_dmsp.parquet"),
   theil_viirs      = file.path(DIR_CLEAN, "theil", "theil_viirs.parquet"),
 
+  # The same metrics computed with GHS-POP R2023A population counts.
+  gradients_pop_dmsp_ghs     = file.path(DIR_CLEAN, "gradients", "gradients_pop_control_dmsp_ghs.parquet"),
+  gradients_pop_viirs_ghs    = file.path(DIR_CLEAN, "gradients", "gradients_pop_control_viirs_ghs.parquet"),
+  gradients_no_pop_dmsp_ghs  = file.path(DIR_CLEAN, "gradients", "gradients_no_pop_control_dmsp_ghs.parquet"),
+  gradients_no_pop_viirs_ghs = file.path(DIR_CLEAN, "gradients", "gradients_no_pop_control_viirs_ghs.parquet"),
+  gini_dmsp_ghs    = file.path(DIR_CLEAN, "gini", "gini_dmsp_ghs.parquet"),
+  gini_viirs_ghs   = file.path(DIR_CLEAN, "gini", "gini_viirs_ghs.parquet"),
+  theil_dmsp_ghs   = file.path(DIR_CLEAN, "theil", "theil_dmsp_ghs.parquet"),
+  theil_viirs_ghs  = file.path(DIR_CLEAN, "theil", "theil_viirs_ghs.parquet"),
+
+  # Step 4b: gradients measured from population-weighted centroids.
+  pwc_centroids    = file.path(DIR_CLEAN, "distances", "population_weighted_centroids.parquet"),
+  gradients_pwc_pop_dmsp         = file.path(DIR_CLEAN, "gradients", "gradients_pwc_pop_control_dmsp.parquet"),
+  gradients_pwc_pop_viirs        = file.path(DIR_CLEAN, "gradients", "gradients_pwc_pop_control_viirs.parquet"),
+  gradients_pwc_no_pop_dmsp      = file.path(DIR_CLEAN, "gradients", "gradients_pwc_no_pop_control_dmsp.parquet"),
+  gradients_pwc_no_pop_viirs     = file.path(DIR_CLEAN, "gradients", "gradients_pwc_no_pop_control_viirs.parquet"),
+  gradients_pwc_pop_dmsp_ghs     = file.path(DIR_CLEAN, "gradients", "gradients_pwc_pop_control_dmsp_ghs.parquet"),
+  gradients_pwc_pop_viirs_ghs    = file.path(DIR_CLEAN, "gradients", "gradients_pwc_pop_control_viirs_ghs.parquet"),
+  gradients_pwc_no_pop_dmsp_ghs  = file.path(DIR_CLEAN, "gradients", "gradients_pwc_no_pop_control_dmsp_ghs.parquet"),
+  gradients_pwc_no_pop_viirs_ghs = file.path(DIR_CLEAN, "gradients", "gradients_pwc_no_pop_control_viirs_ghs.parquet"),
+
   dataset          = file.path(DIR_CLEAN, "consolidated",
                                "urban_inequality_dataset_1995_2020.parquet"),
+  codebook         = file.path(DIR_CLEAN, "consolidated",
+                               "ui_codebook.csv"),
+
+  # Epoch dataset (src/05_epoch_dataset/): GHS-UCDB R2024A polygons of each
+  # epoch on the 1 km GHS grid.
+  epoch_centroids  = file.path(DIR_CLEAN, "epoch", "population_centroids_epoch_ucdb2024.parquet"),
+  epoch_distances  = file.path(DIR_CLEAN, "epoch", "grid_distances_epoch_ucdb2024.parquet"),
+  epoch_cells      = file.path(DIR_CLEAN, "epoch", "cells_ntl_population_epoch_ucdb2024.parquet"),
+  epoch_metrics    = file.path(DIR_CLEAN, "epoch", "metrics_epoch_ucdb2024.parquet"),
+  epoch_dataset    = file.path(DIR_CLEAN, "consolidated",
+                               "urban_inequality_dataset_epoch_ucdb2024_1995_2020.parquet"),
+  epoch_codebook   = file.path(DIR_CLEAN, "consolidated",
+                               "ui_codebook_epoch_ucdb2024.csv"),
+  crosswalk        = file.path(DIR_CLEAN, "consolidated",
+                               "crosswalk_ucdb2015_epoch_ucdb2024.parquet"),
+  crosswalk_codebook = file.path(DIR_CLEAN, "consolidated",
+                                 "ui_codebook_crosswalk_ucdb2015_epoch_ucdb2024.csv"),
+
+  # Inputs, licences and primary sources (src/R/sources.R). The table ships
+  # with the repository and a copy is written next to the codebooks.
+  sources          = here::here("data", "reference", "data_sources_licenses.csv"),
+  sources_out      = file.path(DIR_CLEAN, "consolidated", "data_sources_licenses.csv"),
 
   # Bundled with the repository: aggregate census inequality, one row per
   # city-year. Step 1 of the ACS case study overwrites these from IPUMS
   # microdata; steps 2 and 3 read them and need nothing else.
   acs_gini         = here::here("data", "acs", "acs_gini_by_city.xlsx"),
-  acs_theil        = here::here("data", "acs", "acs_theil_by_city.xlsx")
+  acs_theil        = here::here("data", "acs", "acs_theil_by_city.xlsx"),
+
+  # Bundled with the repository: census inequality for the supplementary
+  # validation (src/06_supplementary/), built from INEGI and IBGE microdata by
+  # steps 1 and 2 of that folder.
+  mexico_census    = here::here("data", "census_mexico", "mexico_census_inequality_epoch_ucdb2024.csv"),
+  brazil_census    = here::here("data", "census_brazil", "brazil_census_inequality_by_municipality.csv"),
+  brazil_crosswalk = here::here("data", "census_brazil", "crosswalk_epoch_ucdb2024_municipality.csv"),
+
+  # Bundled with the repository: income and nightlights inequality between
+  # census tracts of US urban centres (src/06_supplementary/03_us_tract_inequality.R).
+  us_tract_inequality = here::here("data", "census_us_tracts", "us_tract_inequality_city_year.csv")
 )
 
 # `config.R` may define PATHS_OVERRIDE to redirect individual entries, for
@@ -106,6 +162,10 @@ BENCHMARK_YEARS <- c(1995, 2000, 2005, 2010, 2015, 2020)
 # VIIRS variable over the full panel silently treats 1995-2010 as missing data
 # rather than as out of scope.
 VIIRS_YEARS <- c(2015, 2020)
+
+# VIIRS VNL v2.1 product read from DIR_NTL_VIIRS.
+VIIRS_PRODUCT  <- "median_masked"
+VIIRS_SIGMA_KM <- 5
 
 # Minimum number of valid grid cells per city-year.
 #   Gini and Theil need two cells to have a distribution at all.
@@ -150,12 +210,26 @@ require_input <- function(path, produced_by = NULL) {
 
 #' Extract a four-digit benchmark year from a raster file name.
 #'
-#' Handles the three naming conventions present in the raw inputs:
+#' Handles the naming conventions present in the raw inputs:
+#'   DMSP        F121995.v4b.global.stable_lights.avg_vis.tif
 #'   DMSP-like   F15_20150101_20151231.global.stable_lights.avg_vis.tif
-#'   VIIRS VNL   VNL_v21_npp_2015_global_vcmslcfg_c202205302300.average_masked.tif
-#'   GPW         gpw_v4_population_density_rev11_2015_30_sec.tif
+#'   VIIRS VNL   VNL_v21_npp_2015_global_vcmslcfg_c202205302300.median_masked.dat.tif
+#'   GPWv4       gpw_v4_population_count_rev11_2015_30_sec.tif
+#'   GPWv3       glp95ag.tif   (two-digit year)
+#'   GHS-POP     GHS_POP_E2015_GLOBE_R2023A_4326_30ss_V1_0.tif
 year_from_filename <- function(path) {
   fname <- basename(path)
+
+  # GPWv3 grids: "glp" followed by a two-digit year.
+  m <- regmatches(fname, regexec("^glp([0-9]{2})", fname))[[1]]
+  if (length(m) >= 2) {
+    yy <- as.integer(m[2])
+    return(if (yy >= 50) 1900L + yy else 2000L + yy)
+  }
+
+  # GHS-POP: epoch year after "_E".
+  m <- regmatches(fname, regexec("_E((19|20)[0-9]{2})_", fname))[[1]]
+  if (length(m) >= 2) return(as.integer(m[2]))
 
   # DMSP: satellite tag (F12, F15, ...) immediately followed by the year.
   m <- regmatches(fname, regexec("F\\d{2}(19\\d{2}|20\\d{2})", fname))[[1]]
@@ -182,13 +256,14 @@ year_from_filename <- function(path) {
 #' organised, which is enough to build the DMSP and VIIRS branches of the
 #' pipeline on different population inputs without any error being raised.
 #' Requiring one raster per year makes that failure loud instead.
-resolve_rasters_by_year <- function(dir, years, label = basename(dir)) {
+resolve_rasters_by_year <- function(dir, years, label = basename(dir), contains = NULL) {
   if (!dir.exists(dir)) {
     stop("Directory not found for ", label, ": ", dir, call. = FALSE)
   }
 
   files <- list.files(dir, pattern = "\\.tif$|\\.tif\\.gz$",
                       full.names = TRUE, recursive = TRUE)
+  if (!is.null(contains)) files <- files[grepl(contains, basename(files), fixed = TRUE)]
   if (length(files) == 0) {
     stop("No rasters found for ", label, " in ", dir, call. = FALSE)
   }
@@ -225,6 +300,24 @@ resolve_rasters_by_year <- function(dir, years, label = basename(dir)) {
 #' Both extraction steps call this, so both see the same files by construction.
 resolve_population_rasters <- function(years = BENCHMARK_YEARS) {
   resolve_rasters_by_year(DIR_POPULATION, years, label = "population")
+}
+
+#' GHS-POP rasters for the benchmark years: WGS84 30 arc-seconds by default,
+#' or the 1 km Mollweide grid used by the epoch dataset.
+resolve_ghs_pop_rasters <- function(years = BENCHMARK_YEARS, mollweide = FALSE) {
+  if (mollweide) {
+    resolve_rasters_by_year(DIR_GHS_POP_MOLL, years, label = "GHS-POP (Mollweide)",
+                            contains = "_54009_1000_")
+  } else {
+    resolve_rasters_by_year(DIR_GHS_POP, years, label = "GHS-POP (WGS84)",
+                            contains = "_4326_30ss_")
+  }
+}
+
+#' VIIRS VNL rasters of the product named in VIIRS_PRODUCT.
+resolve_viirs_rasters <- function(years = VIIRS_YEARS) {
+  resolve_rasters_by_year(DIR_NTL_VIIRS, years, label = "VIIRS VNL v2.1",
+                          contains = VIIRS_PRODUCT)
 }
 
 #' Register a parallel backend and return the cluster, for `on.exit` teardown.

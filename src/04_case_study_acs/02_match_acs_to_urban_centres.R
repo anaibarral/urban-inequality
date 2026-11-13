@@ -124,16 +124,16 @@ dataset <- read_parquet(PATHS$dataset)
 
 ntl_dmsp <- dataset |>
   select(country_name, iso_code, city_id, city_name, year,
-         nl_gini_coef_dmsp, nl_theil_coef_dmsp) |>
+         nl_gini_coef_dmsp_gpw, nl_theil_coef_dmsp_gpw) |>
   filter(iso_code == "USA") |>
-  drop_na(nl_gini_coef_dmsp, nl_theil_coef_dmsp) |>
+  drop_na(nl_gini_coef_dmsp_gpw, nl_theil_coef_dmsp_gpw) |>
   left_join(state_lookup, by = "city_id")
 
 ntl_viirs <- dataset |>
   select(country_name, iso_code, city_id, city_name, year,
-         nl_gini_coef_viirs, nl_theil_coef_viirs) |>
+         nl_gini_coef_viirs_gpw, nl_theil_coef_viirs_gpw) |>
   filter(iso_code == "USA", year %in% VIIRS_YEARS) |>
-  drop_na(nl_gini_coef_viirs, nl_theil_coef_viirs) |>
+  drop_na(nl_gini_coef_viirs_gpw, nl_theil_coef_viirs_gpw) |>
   left_join(state_lookup, by = "city_id")
 
 stopifnot(!any(is.na(ntl_dmsp$state_abb)), !any(is.na(ntl_viirs$state_abb)))
@@ -146,11 +146,11 @@ stopifnot(!any(is.na(ntl_dmsp$state_abb)), !any(is.na(ntl_viirs$state_abb)))
 # excluded rather than approximated.
 
 matched_dmsp <- inner_join(ntl_dmsp, acs, by = c("city_name", "state_abb", "year")) |>
-  rename(gini_nl_dmsp = nl_gini_coef_dmsp, theil_nl_dmsp = nl_theil_coef_dmsp,
+  rename(gini_nl_dmsp = nl_gini_coef_dmsp_gpw, theil_nl_dmsp = nl_theil_coef_dmsp_gpw,
          gini_acs = gini, theil_acs = theil)
 
 matched_viirs <- inner_join(ntl_viirs, acs, by = c("city_name", "state_abb", "year")) |>
-  rename(gini_nl_viirs = nl_gini_coef_viirs, theil_nl_viirs = nl_theil_coef_viirs,
+  rename(gini_nl_viirs = nl_gini_coef_viirs_gpw, theil_nl_viirs = nl_theil_coef_viirs_gpw,
          gini_acs = gini, theil_acs = theil)
 
 # Permanent guard against the homonym fan-out described in the header.

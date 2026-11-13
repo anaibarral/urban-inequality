@@ -102,10 +102,10 @@ tidy_both <- function(pair) {
 
 specifications <- tribble(
   ~source,  ~outcome,                   ~years,           ~specification,
-  "DMSP",   "nl_gradient_pop_dmsp",     BENCHMARK_YEARS,  "With population control",
-  "VIIRS",  "nl_gradient_pop_viirs",    VIIRS_YEARS,      "With population control",
-  "DMSP",   "nl_gradient_no_pop_dmsp",  BENCHMARK_YEARS,  "Without population control",
-  "VIIRS",  "nl_gradient_no_pop_viirs", VIIRS_YEARS,      "Without population control"
+  "DMSP",   "nl_gradient_pop_dmsp_gpw",     BENCHMARK_YEARS,  "With population control",
+  "VIIRS",  "nl_gradient_pop_viirs_gpw",    VIIRS_YEARS,      "With population control",
+  "DMSP",   "nl_gradient_no_pop_dmsp_gpw",  BENCHMARK_YEARS,  "Without population control",
+  "VIIRS",  "nl_gradient_no_pop_viirs_gpw", VIIRS_YEARS,      "Without population control"
 )
 
 stars <- function(p) {
@@ -242,7 +242,7 @@ residual_density <- function(frame, column, x_limits = c(-0.5, 0.5)) {
 final_year <- max(BENCHMARK_YEARS)
 
 for (src in c("dmsp", "viirs")) {
-  column <- paste0("nl_gradient_pop_", src)
+  column <- paste0("nl_gradient_pop_", src, "_gpw")
 
   frame <- panel |>
     filter(year == final_year) |>

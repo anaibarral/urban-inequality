@@ -10,7 +10,7 @@
 #
 # Notation follows the Methods section of the paper:
 #   NL_g      nighttime light intensity in grid cell g
-#   POP_g     population density in grid cell g (persons per sq. km)
+#   POP_g     population of grid cell g (persons, from a population count grid)
 #   NLpc_g    per-capita luminosity, NL_g / POP_g
 #   d_gc      geodesic distance from the centre of cell g to the city centroid
 # ==============================================================================
@@ -23,13 +23,13 @@
 #' Population-weighted Gini coefficient of per-capita luminosity.
 #'
 #' @param x Numeric vector of per-capita luminosity, one element per grid cell.
-#' @param w Numeric vector of population weights (cell population density).
+#' @param w Numeric vector of population weights (cell population).
 #' @return  A scalar in [0, 1].
 #'
 #' Computed with `DescTools::Gini(unbiased = FALSE)`, the plug-in estimator that
 #' matches the formula in the paper. The index is invariant to the scale of the
-#' weights, so passing raw population density is equivalent to passing
-#' normalised population shares.
+#' weights, so passing cell population is equivalent to passing normalised
+#' population shares.
 #'
 #' Cells with zero population must already have been removed by the caller: the
 #' per-capita ratio is undefined for them. Cells with zero luminosity but
@@ -42,7 +42,7 @@ gini_weighted <- function(x, w) {
 #' Population-weighted Theil T index of per-capita luminosity.
 #'
 #' @param x Numeric vector of per-capita luminosity, strictly positive.
-#' @param w Numeric vector of population weights (cell population density).
+#' @param w Numeric vector of population weights (cell population).
 #' @return  A non-negative scalar, unbounded above.
 #'
 #' Implements the definition used in the paper directly:
@@ -77,7 +77,7 @@ theil_weighted <- function(x, w) {
 #' Compute a dispersion index for every city-year in a cell-level table.
 #'
 #' @param cells   Cell-level data with columns city_id, year, nl_measure,
-#'                pop_density.
+#'                pop.
 #' @param index   Either "gini" or "theil".
 #' @param cl      An optional registered parallel cluster.
 #' @return        One row per city-year with the index and the cell count used.
@@ -94,8 +94,8 @@ compute_dispersion_index <- function(cells, index = c("gini", "theil")) {
   index <- match.arg(index)
 
   admissible <- cells |>
-    dplyr::mutate(nl_per_capita = nl_measure / pop_density) |>
-    dplyr::filter(pop_density > 0, is.finite(nl_per_capita))
+    dplyr::mutate(nl_per_capita = nl_measure / pop) |>
+    dplyr::filter(pop > 0, is.finite(nl_per_capita))
 
   if (index == "theil") {
     admissible <- dplyr::filter(admissible, nl_per_capita > 0)
@@ -108,7 +108,7 @@ compute_dispersion_index <- function(cells, index = c("gini", "theil")) {
     dplyr::group_by(city_id, year) |>
     dplyr::filter(dplyr::n() >= MIN_CELLS_DISPERSION) |>
     dplyr::summarise(
-      value    = estimator(nl_per_capita, pop_density),
+      value    = estimator(nl_per_capita, pop),
       n_cells_used = dplyr::n(),
       .groups  = "drop"
     ) |>
@@ -125,7 +125,7 @@ compute_dispersion_index <- function(cells, index = c("gini", "theil")) {
 #' Fit one city-year luminosity gradient by OLS.
 #'
 #' @param df               Cells of a single city-year, with nl_measure,
-#'                         dist_mt and pop_density.
+#'                         dist_mt and pop.
 #' @param population_control Include asinh(POP_g) as a regressor?
 #' @return                 A one-row data frame, or NULL if the fit fails.
 #'
@@ -145,18 +145,32 @@ compute_dispersion_index <- function(cells, index = c("gini", "theil")) {
 #' per resident.
 fit_city_gradient <- function(df, population_control) {
   formula <- if (population_control) {
-    asinh(nl_measure) ~ asinh(dist_mt) + asinh(pop_density)
+    asinh(nl_measure) ~ asinh(dist_mt) + asinh(pop)
   } else {
     asinh(nl_measure) ~ asinh(dist_mt)
   }
 
-  reg <- tryCatch(fixest::feols(formula, data = df), error = function(e) NULL)
-  if (is.null(reg)) return(NULL)
+  # Population is often nearly constant across the cells of a small city; an
+  # explicit, strict collinearity tolerance keeps it in the regression
+  # regardless of the fixest default.
+  reg <- tryCatch(fixest::feols(formula, data = df, collin.tol = 1e-12), error = function(e) NULL)
 
-  coefs  <- stats::coef(reg)
-  errs   <- fixest::se(reg)
-  pvals  <- fixest::pvalue(reg)
-  tstats <- fixest::tstat(reg)
+  if (!is.null(reg)) {
+    coefs  <- stats::coef(reg)
+    errs   <- fixest::se(reg)
+    pvals  <- fixest::pvalue(reg)
+    tstats <- fixest::tstat(reg)
+  } else {
+    # feols refuses a constant outcome (every cell equally lit, e.g. saturated
+    # DMSP cores); ordinary least squares returns the flat gradient instead.
+    reg <- tryCatch(stats::lm(formula, data = df), error = function(e) NULL)
+    if (is.null(reg)) return(NULL)
+    ct <- suppressWarnings(summary(reg))$coefficients
+    coefs  <- ct[, 1]
+    errs   <- ct[, 2]
+    tstats <- ct[, 3]
+    pvals  <- ct[, 4]
+  }
 
   slope <- "asinh(dist_mt)"
   res <- data.frame(
@@ -171,7 +185,7 @@ fit_city_gradient <- function(df, population_control) {
     p_value0  = pvals["(Intercept)"],
     t_stat0   = tstats["(Intercept)"],
     type_reg  = if (population_control) "Pop control reg" else "No pop control reg",
-    n_obs     = fixest::nobs(reg),
+    n_obs     = stats::nobs(reg),
     row.names = NULL
   )
 
@@ -199,7 +213,7 @@ fit_city_gradient <- function(df, population_control) {
 compute_gradients <- function(cells, population_control) {
   tasks <- cells |>
     tidyr::drop_na(dist_mt) |>
-    dplyr::filter(nl_measure > 0, pop_density > 0) |>
+    dplyr::filter(nl_measure > 0, pop > 0) |>
     dplyr::group_by(city_id, year) |>
     dplyr::filter(dplyr::n() >= MIN_CELLS_GRADIENT) |>
     dplyr::ungroup() |>

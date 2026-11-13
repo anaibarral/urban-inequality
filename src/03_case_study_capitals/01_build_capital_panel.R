@@ -65,10 +65,10 @@ dataset <- read_parquet(PATHS$dataset)
 panel <- dataset |>
   select(
     country_name, iso_code, city_id, city_name, year,
-    nl_gradient_no_pop_dmsp, nl_gradient_pop_dmsp,
-    nl_gradient_no_pop_viirs, nl_gradient_pop_viirs,
-    nl_gini_coef_dmsp, nl_theil_coef_dmsp,
-    nl_gini_coef_viirs, nl_theil_coef_viirs
+    nl_gradient_no_pop_dmsp_gpw, nl_gradient_pop_dmsp_gpw,
+    nl_gradient_no_pop_viirs_gpw, nl_gradient_pop_viirs_gpw,
+    nl_gini_coef_dmsp_gpw, nl_theil_coef_dmsp_gpw,
+    nl_gini_coef_viirs_gpw, nl_theil_coef_viirs_gpw
   ) |>
   mutate(
     country_key = normalise(country_name),

@@ -10,8 +10,8 @@
 # The estimators live in src/R/inequality.R.
 #
 # Input   PATHS$cells_dmsp, PATHS$cells_viirs   (step 3)
-# Output  PATHS$gini_dmsp,  PATHS$gini_viirs
-#         PATHS$theil_dmsp, PATHS$theil_viirs
+# Output  PATHS$gini_{dmsp,viirs},  PATHS$theil_{dmsp,viirs}       (GPW population)
+#         PATHS$gini_{dmsp,viirs}_ghs, PATHS$theil_{dmsp,viirs}_ghs (GHS-POP population)
 #
 # The two indices admit different cells, and that is why the Theil covers fewer
 # city-years than the Gini in the published dataset:
@@ -40,11 +40,18 @@ library(arrow)
 require_input(PATHS$cells_dmsp, "03_extract_ntl_and_population.R")
 require_input(PATHS$cells_viirs, "03_extract_ntl_and_population.R")
 
+# Each index is computed with GPW population counts (column pop) and with
+# GHS-POP population counts (column pop_ghs), which serve both as the
+# denominator of per-capita luminosity and as the weights.
 jobs <- list(
-  list(source = "dmsp",  cells = PATHS$cells_dmsp,
+  list(source = "dmsp",  cells = PATHS$cells_dmsp,  pop = "gpw",
        gini = PATHS$gini_dmsp,  theil = PATHS$theil_dmsp),
-  list(source = "viirs", cells = PATHS$cells_viirs,
-       gini = PATHS$gini_viirs, theil = PATHS$theil_viirs)
+  list(source = "viirs", cells = PATHS$cells_viirs, pop = "gpw",
+       gini = PATHS$gini_viirs, theil = PATHS$theil_viirs),
+  list(source = "dmsp",  cells = PATHS$cells_dmsp,  pop = "ghs",
+       gini = PATHS$gini_dmsp_ghs,  theil = PATHS$theil_dmsp_ghs),
+  list(source = "viirs", cells = PATHS$cells_viirs, pop = "ghs",
+       gini = PATHS$gini_viirs_ghs, theil = PATHS$theil_viirs_ghs)
 )
 
 
@@ -54,9 +61,11 @@ jobs <- list(
 
 for (job in jobs) {
 
-  log_step(sprintf("=== %s dispersion indices ===", toupper(job$source)))
+  log_step(sprintf("=== %s dispersion indices, %s population ===",
+                   toupper(job$source), toupper(job$pop)))
 
   cells <- read_parquet(job$cells)
+  if (job$pop == "ghs") cells <- dplyr::mutate(cells, pop = pop_ghs)
 
   # --- Gini ---
   gini <- compute_dispersion_index(cells, index = "gini")

@@ -48,10 +48,10 @@ share_negative <- function(frame, column, source_label, specification) {
 dataset_viirs <- filter(dataset, year %in% VIIRS_YEARS)
 
 table_03 <- bind_rows(
-  share_negative(dataset,       "nl_gradient_pop_dmsp",     "DMSP",  "With population control"),
-  share_negative(dataset_viirs, "nl_gradient_pop_viirs",    "VIIRS", "With population control"),
-  share_negative(dataset,       "nl_gradient_no_pop_dmsp",  "DMSP",  "Without population control"),
-  share_negative(dataset_viirs, "nl_gradient_no_pop_viirs", "VIIRS", "Without population control")
+  share_negative(dataset,       "nl_gradient_pop_dmsp_gpw",     "DMSP",  "With population control"),
+  share_negative(dataset_viirs, "nl_gradient_pop_viirs_gpw",    "VIIRS", "With population control"),
+  share_negative(dataset,       "nl_gradient_no_pop_dmsp_gpw",  "DMSP",  "Without population control"),
+  share_negative(dataset_viirs, "nl_gradient_no_pop_viirs_gpw", "VIIRS", "Without population control")
 ) |>
   mutate(
     year = as.integer(year),

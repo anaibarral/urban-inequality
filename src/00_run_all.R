@@ -7,6 +7,8 @@
 #     Rscript src/00_run_all.R              # everything
 #     Rscript src/00_run_all.R exhibits     # exhibits only, dataset already built
 #     Rscript src/00_run_all.R dataset      # dataset only
+#     Rscript src/00_run_all.R epoch        # epoch dataset and its validation
+#     Rscript src/00_run_all.R supplementary  # Supplementary Information tables and figures
 #
 # Requires config.R in the repository root. See config.example.R.
 #
@@ -20,8 +22,8 @@
 stage <- commandArgs(trailingOnly = TRUE)
 stage <- if (length(stage) == 0) "all" else stage[1]
 
-if (!stage %in% c("all", "dataset", "exhibits")) {
-  stop("Unknown stage '", stage, "'. Use one of: all, dataset, exhibits.",
+if (!stage %in% c("all", "dataset", "exhibits", "epoch", "supplementary")) {
+  stop("Unknown stage '", stage, "'. Use one of: all, dataset, exhibits, epoch, supplementary.",
        call. = FALSE)
 }
 
@@ -38,6 +40,7 @@ DATASET_SCRIPTS <- c(
   "src/01_data_construction/02_compute_grid_distances.R",
   "src/01_data_construction/03_extract_ntl_and_population.R",
   "src/01_data_construction/04_estimate_gradients.R",
+  "src/01_data_construction/04b_estimate_gradients_pwc.R",
   "src/01_data_construction/05_compute_dispersion_indices.R",
   "src/01_data_construction/06_consolidate_dataset.R"
 )
@@ -62,11 +65,38 @@ EXHIBIT_SCRIPTS <- c(
   "src/02_validation/table_06_pairwise_correlations.R"
 )
 
+# The epoch dataset: GHS-UCDB R2024A polygons of each epoch, with its own
+# validation tables. Independent of the main dataset except for the crosswalk.
+EPOCH_SCRIPTS <- c(
+  "src/05_epoch_dataset/01_population_centroids.R",
+  "src/05_epoch_dataset/02_grid_distances.R",
+  "src/05_epoch_dataset/03_extract_ntl_and_population.R",
+  "src/05_epoch_dataset/04_compute_metrics.R",
+  "src/05_epoch_dataset/05_consolidate_dataset.R",
+  "src/05_epoch_dataset/table_e_validation_epoch.R"
+)
+
+# Supplementary Information: all its tables and figures. Needs the main
+# and the epoch datasets. Steps 01 and 02 of the folder (census microdata) are
+# not run here: their outputs are bundled in data/census_mexico/ and
+# data/census_brazil/. Step 03 (US census tracts, needs a Census Data API key)
+# is not run either: its output is bundled in data/census_us_tracts/.
+SUPPLEMENTARY_SCRIPTS <- c(
+  "src/06_supplementary/table_si_ghspop.R",
+  "src/06_supplementary/table_si_pwc_gradients.R",
+  "src/06_supplementary/table_si_epoch_validation.R",
+  "src/06_supplementary/table_si_census_validation.R",
+  "src/06_supplementary/table_si_dmsp_topcoding.R",
+  "src/06_supplementary/table_si_tract_validation.R"
+)
+
 scripts <- switch(
   stage,
-  all      = c(DATASET_SCRIPTS, EXHIBIT_SCRIPTS),
+  all      = c(DATASET_SCRIPTS, EXHIBIT_SCRIPTS, EPOCH_SCRIPTS, SUPPLEMENTARY_SCRIPTS),
   dataset  = DATASET_SCRIPTS,
-  exhibits = EXHIBIT_SCRIPTS
+  exhibits = EXHIBIT_SCRIPTS,
+  epoch    = EPOCH_SCRIPTS,
+  supplementary = SUPPLEMENTARY_SCRIPTS
 )
 
 

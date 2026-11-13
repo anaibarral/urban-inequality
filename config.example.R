@@ -5,7 +5,7 @@
 #
 # HOW TO USE
 #   1. Copy this file to `config.R` in the repository root.
-#   2. Edit the four root paths below to match your machine.
+#   2. Edit the root paths below to match your machine.
 #   3. Never commit `config.R` — it is listed in .gitignore.
 #
 # Every script in `src/` reaches its inputs and outputs through the helpers
@@ -41,10 +41,15 @@ PATH_UCDB <- file.path(DIR_RAW, "ghsl",
 # Directory of extended DMSP-like annual composites (one GeoTIFF per year).
 DIR_NTL_DMSP <- file.path(DIR_RAW, "ntl", "dmsp_annual")
 
-# Directory of VIIRS VNL v2.1 annual composites (one GeoTIFF per year).
+# Directory of VIIRS VNL v2.1 annual composites. The folder may hold several
+# products per year; the pipeline reads the one named in VIIRS_PRODUCT
+# (src/R/setup.R).
 DIR_NTL_VIIRS <- file.path(DIR_RAW, "ntl", "viirs_annual")
 
-# Directory of gridded population density rasters, one per benchmark year.
+# Directory of gridded population COUNT rasters (persons per cell), one per
+# benchmark year: GPWv4 Rev. 11 population count at 30 arc-seconds for
+# 2000-2020, and the GPWv3 UN-adjusted population count grid (glp95ag, 2.5
+# arc-minutes) for 1995.
 #
 # IMPORTANT: the pipeline reads this directory with `list.files(recursive =
 # TRUE)`, and every benchmark year must resolve to exactly one raster. Both the
@@ -53,6 +58,21 @@ DIR_NTL_VIIRS <- file.path(DIR_RAW, "ntl", "viirs_annual")
 # enforces this with `resolve_population_rasters()`.
 DIR_POPULATION <- file.path(DIR_RAW, "population")
 
+# GHS-POP R2023A population count rasters, one per benchmark year.
+#   DIR_GHS_POP       30 arc-second WGS84 version (EPSG:4326), used for the
+#                     second population total of the main dataset.
+#   DIR_GHS_POP_MOLL  1 km Mollweide version (ESRI:54009), the grid of the
+#                     GHS-UCDB R2024A polygons, used by the epoch dataset.
+DIR_GHS_POP      <- file.path(DIR_RAW, "ghs_pop", "wgs84_30ss")
+DIR_GHS_POP_MOLL <- file.path(DIR_RAW, "ghs_pop", "mollweide_1km")
+
+# GHS Urban Centre Database R2024A, used by the epoch dataset
+# (src/05_epoch_dataset/).
+#   PATH_UCDB_MTUC  multitemporal urban centres: one polygon layer per epoch.
+#   PATH_UCDB_2024  full database, read for the national capital indicator.
+PATH_UCDB_MTUC <- file.path(DIR_RAW, "ghsl", "GHS_UCDB_MTUC_GLOBE_R2024A.gpkg")
+PATH_UCDB_2024 <- file.path(DIR_RAW, "ghsl", "GHS_UCDB_GLOBE_R2024A.gpkg")
+
 # IPUMS USA extracts for the ACS case study: one .xml DDI file per ACS sample,
 # with the matching .dat.gz alongside it.
 #
@@ -60,6 +80,24 @@ DIR_POPULATION <- file.path(DIR_RAW, "population")
 # bundled in data/acs/, so the rest of the case study runs without it. IPUMS
 # terms forbid redistributing extracts; see data/README.md to rebuild them.
 DIR_ACS_IPUMS <- file.path(DIR_RAW, "acs_usa_ipums")
+
+# Census microdata for the supplementary validation with Mexico and Brazil
+# (src/06_supplementary/). Needed ONLY by steps 01 and 02 of that folder; their
+# outputs are bundled in data/census_mexico/ and data/census_brazil/. Expected
+# layout (see data/README.md for the download links):
+#   DIR_CENSUS_MEXICO/inegi-censo2010/sas/viviendas_<EE>.sas7bdat
+#   DIR_CENSUS_MEXICO/inegi-intercensal2015/csv/TR_VIVIENDA<EE>.CSV
+#   DIR_CENSUS_MEXICO/inegi-censo2020/csv/Viviendas00.CSV
+#   DIR_CENSUS_MEXICO/inegi-iter2020/ITER_NALCSV20.csv
+#   DIR_CENSUS_BRAZIL/ibge-censo2000/<UF>.zip, DIR_CENSUS_BRAZIL/ibge-censo2010/<UF>.zip
+#   DIR_CENSUS_BRAZIL/geobr-brasil/  (municipal boundaries; downloaded if absent)
+DIR_CENSUS_MEXICO <- file.path(DIR_RAW, "census_mexico")
+DIR_CENSUS_BRAZIL <- file.path(DIR_RAW, "census_brazil")
+
+# US census tracts (src/06_supplementary/03_us_tract_inequality.R, only to
+# rebuild data/census_us_tracts/): needs a free Census Data API key
+# (https://api.census.gov/data/key_signup.html) in the environment variable
+# CENSUS_API_KEY, for instance in ~/.Renviron. Do not write the key here.
 
 # Reference list of national capitals (CountryName, CapitalName, ...).
 # Bundled with the repository.

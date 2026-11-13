@@ -83,11 +83,11 @@ build_gradient_figure <- function(column, gradient_path, n_col) {
 # ------------------------------------------------------------------------------
 
 log_step("Building Figure 2(a): DMSP, population-controlled gradients.")
-fig_2a <- build_gradient_figure("nl_gradient_pop_dmsp", PATHS$gradients_pop_dmsp, n_col = 3)
+fig_2a <- build_gradient_figure("nl_gradient_pop_dmsp_gpw", PATHS$gradients_pop_dmsp, n_col = 3)
 save_figure(fig_2a, "figure_02a_gradients_pop_dmsp.png", width = 10, height = 6)
 
 log_step("Building Figure 2(b): VIIRS, population-controlled gradients.")
-fig_2b <- build_gradient_figure("nl_gradient_pop_viirs", PATHS$gradients_pop_viirs, n_col = 2)
+fig_2b <- build_gradient_figure("nl_gradient_pop_viirs_gpw", PATHS$gradients_pop_viirs, n_col = 2)
 save_figure(fig_2b, "figure_02b_gradients_pop_viirs.png", width = 10, height = 6)
 
 
@@ -98,11 +98,11 @@ save_figure(fig_2b, "figure_02b_gradients_pop_viirs.png", width = 10, height = 6
 log_step("Building the unconditional-gradient counterparts.")
 
 save_figure(
-  build_gradient_figure("nl_gradient_no_pop_dmsp", PATHS$gradients_no_pop_dmsp, n_col = 3),
+  build_gradient_figure("nl_gradient_no_pop_dmsp_gpw", PATHS$gradients_no_pop_dmsp, n_col = 3),
   "figure_a01a_gradients_no_pop_dmsp.png", width = 10, height = 6
 )
 save_figure(
-  build_gradient_figure("nl_gradient_no_pop_viirs", PATHS$gradients_no_pop_viirs, n_col = 2),
+  build_gradient_figure("nl_gradient_no_pop_viirs_gpw", PATHS$gradients_no_pop_viirs, n_col = 2),
   "figure_a01b_gradients_no_pop_viirs.png", width = 10, height = 6
 )
 

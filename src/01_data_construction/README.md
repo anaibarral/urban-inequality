@@ -1,16 +1,17 @@
 # Data construction
 
-Builds the Urban Inequality Dataset from raw rasters and polygons. Six steps,
-run in order.
+Builds the Urban Inequality Dataset from raw rasters and polygons. Six steps
+(plus step 4b), run in order.
 
 | Step | Script | Produces |
 |---|---|---|
 | 1 | `01_build_urban_centre_grids.R` | One square polygon per ~1 km grid cell inside each urban centre, plus its centroid |
 | 2 | `02_compute_grid_distances.R` | Geodesic distance from every cell centroid to its city centroid |
 | 3 | `03_extract_ntl_and_population.R` | Cell-level luminosity and population, for both NTL sources |
-| 4 | `04_estimate_gradients.R` | Four gradient columns: two specifications × two sources |
-| 5 | `05_compute_dispersion_indices.R` | Gini and Theil, for both sources |
-| 6 | `06_consolidate_dataset.R` | The published 70,024 × 17 panel |
+| 4 | `04_estimate_gradients.R` | Eight gradient columns: two specifications × two NTL sources × two population sources (GPW, GHS-POP) |
+| 4b | `04b_estimate_gradients_pwc.R` | The same eight gradients measured from the population-weighted centroid of each city-year (`nl_gradient_pwc_*`) |
+| 5 | `05_compute_dispersion_indices.R` | Gini and Theil, for both NTL sources and both population sources |
+| 6 | `06_consolidate_dataset.R` | The 71,763 × 34 panel |
 
 Run the whole sequence with:
 
@@ -48,9 +49,9 @@ metrics have a hierarchy of requirements, which is why their coverage differs:
 
 | Metric | Requires | Coverage (DMSP) |
 |---|---|---|
-| Gini | ≥ 2 populated cells, non-zero total luminosity | 99.9% |
-| Theil | ≥ 2 populated **and lit** cells (the log needs positive values) | 99.5% |
-| Gradients | ≥ 5 populated and lit cells (degrees of freedom) | 93.8% |
+| Gini | ≥ 2 populated cells, non-zero total luminosity | 97.3% |
+| Theil | ≥ 2 populated **and lit** cells (the log needs positive values) | 96.8% |
+| Gradients | ≥ 5 populated and lit cells (degrees of freedom) | 92.6% |
 
 Step 5 asserts the implication of this hierarchy — every city-year with a Theil
 must have a Gini — rather than leaving it to be discovered during validation.
@@ -58,7 +59,7 @@ must have a Gini — rather than leaving it to be discovered during validation.
 ## Runtime
 
 Hours, not minutes. Step 1 builds roughly 920,000 grid polygons, step 3 extracts
-eight global raster pairs, step 4 fits about 175,000 city-year regressions. Each
+eight global raster pairs, step 4 fits about 360,000 city-year regressions. Each
 step writes to disk, so a failed run resumes by invoking the remaining scripts
 directly.
 

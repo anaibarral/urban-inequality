@@ -11,14 +11,18 @@ config.R
 # Raw rasters and intermediate outputs are far too large for version control and
 # are all reproducible from the sources documented in README.md.
 #
-# Two exceptions are versioned, because they are small, redistributable, and
-# tedious to reconstruct: the capitals reference list, and the city-level ACS
-# aggregates that make the ACS case study runnable without an IPUMS account.
-# See data/README.md.
+# A few exceptions are versioned, because they are small, redistributable, and
+# tedious to reconstruct: the capitals reference list, the city-level ACS
+# aggregates that make the ACS case study runnable without an IPUMS account, and
+# the census aggregates for Mexico, Brazil and US census tracts used in the
+# Supplementary Information. See data/README.md.
 data/*
 !data/README.md
 !data/reference/
 !data/acs/
+!data/census_mexico/
+!data/census_brazil/
+!data/census_us_tracts/
 
 *.parquet
 *.tif

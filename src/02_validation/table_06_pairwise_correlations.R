@@ -68,7 +68,7 @@ correlation_panel <- function(frame, vars, labels) {
 # Panel A: DMSP
 # ------------------------------------------------------------------------------
 
-dmsp_vars <- c("nl_gini_coef_dmsp", "nl_theil_coef_dmsp", "nl_gradient_pop_dmsp")
+dmsp_vars <- c("nl_gini_coef_dmsp_gpw", "nl_theil_coef_dmsp_gpw", "nl_gradient_pop_dmsp_gpw")
 
 df_dmsp <- dataset |> select(all_of(dmsp_vars)) |> drop_na()
 panel_a <- correlation_panel(df_dmsp, dmsp_vars, MEASURE_LABELS)
@@ -82,7 +82,7 @@ print(panel_a, row.names = FALSE)
 # Panel B: VIIRS
 # ------------------------------------------------------------------------------
 
-viirs_vars <- c("nl_gini_coef_viirs", "nl_theil_coef_viirs", "nl_gradient_pop_viirs")
+viirs_vars <- c("nl_gini_coef_viirs_gpw", "nl_theil_coef_viirs_gpw", "nl_gradient_pop_viirs_gpw")
 
 df_viirs <- dataset |>
   filter(year %in% VIIRS_YEARS) |>

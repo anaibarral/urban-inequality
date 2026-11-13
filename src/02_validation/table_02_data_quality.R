@@ -34,12 +34,12 @@ require_input(PATHS$dataset, "01_data_construction/06_consolidate_dataset.R")
 
 dataset <- read_parquet(PATHS$dataset)
 
-GRADIENT_COLS <- c("nl_gradient_no_pop_dmsp", "nl_gradient_pop_dmsp",
-                   "nl_gradient_no_pop_viirs", "nl_gradient_pop_viirs")
-DMSP_METRICS  <- c("nl_gradient_no_pop_dmsp", "nl_gradient_pop_dmsp",
-                   "nl_gini_coef_dmsp", "nl_theil_coef_dmsp")
-VIIRS_METRICS <- c("nl_gradient_no_pop_viirs", "nl_gradient_pop_viirs",
-                   "nl_gini_coef_viirs", "nl_theil_coef_viirs")
+GRADIENT_COLS <- c("nl_gradient_no_pop_dmsp_gpw", "nl_gradient_pop_dmsp_gpw",
+                   "nl_gradient_no_pop_viirs_gpw", "nl_gradient_pop_viirs_gpw")
+DMSP_METRICS  <- c("nl_gradient_no_pop_dmsp_gpw", "nl_gradient_pop_dmsp_gpw",
+                   "nl_gini_coef_dmsp_gpw", "nl_theil_coef_dmsp_gpw")
+VIIRS_METRICS <- c("nl_gradient_no_pop_viirs_gpw", "nl_gradient_pop_viirs_gpw",
+                   "nl_gini_coef_viirs_gpw", "nl_theil_coef_viirs_gpw")
 METRIC_COLS   <- c(DMSP_METRICS, VIIRS_METRICS)
 
 n_obs       <- nrow(dataset)
@@ -175,7 +175,7 @@ completeness <- function(cols, frame, denom, source_label) {
 metric_completeness <- bind_rows(
   completeness(DMSP_METRICS, dataset, n_obs, "DMSP"),
   completeness(VIIRS_METRICS, dataset_viirs, n_viirs, "VIIRS"),
-  completeness(c("nl_sum_dmsp", "total_pop", "n_cells"), dataset, n_obs, "Aggregate (DMSP years)"),
+  completeness(c("nl_sum_dmsp", "total_pop_gpw", "total_pop_ghs", "n_cells"), dataset, n_obs, "Aggregate (DMSP years)"),
   completeness("nl_sum_viirs", dataset_viirs, n_viirs, "Aggregate (VIIRS years)")
 )
 
@@ -199,9 +199,9 @@ cat(sprintf("VIIRS values outside %s (must be 0): %d\n",
 cat("\n=== 7. MISSINGNESS HIERARCHY ===\n")
 for (src in c("dmsp", "viirs")) {
   frame <- if (src == "viirs") dataset_viirs else dataset
-  has_gini     <- !is.na(frame[[paste0("nl_gini_coef_", src)]])
-  has_theil    <- !is.na(frame[[paste0("nl_theil_coef_", src)]])
-  has_gradient <- !is.na(frame[[paste0("nl_gradient_no_pop_", src)]])
+  has_gini     <- !is.na(frame[[paste0("nl_gini_coef_", src, "_gpw")]])
+  has_theil    <- !is.na(frame[[paste0("nl_theil_coef_", src, "_gpw")]])
+  has_gradient <- !is.na(frame[[paste0("nl_gradient_no_pop_", src, "_gpw")]])
 
   cat(sprintf("[%s] Theil without Gini (must be 0): %d | gradient without Theil (must be 0): %d\n",
               src, sum(has_theil & !has_gini), sum(has_gradient & !has_theil)))
@@ -216,8 +216,8 @@ for (src in c("dmsp", "viirs")) {
 cat("\nBhutan [paper: 'supports Gini and Theil ... never reaches the five-cell threshold']:\n")
 dataset |>
   filter(country_name == "Bhutan") |>
-  select(city_name, year, nl_gini_coef_dmsp, nl_theil_coef_dmsp,
-         nl_gradient_no_pop_dmsp, n_cells) |>
+  select(city_name, year, nl_gini_coef_dmsp_gpw, nl_theil_coef_dmsp_gpw,
+         nl_gradient_no_pop_dmsp_gpw, n_cells) |>
   as.data.frame() |>
   print(row.names = FALSE)
 
@@ -242,29 +242,31 @@ table_02 <- tibble::tribble(
   "Panel structure", "Duplicate observations",         as.character(nrow(duplicates)),
 
   "DMSP metric completeness (all 6 years)", "Gradient (no pop. control)",
-    pct("nl_gradient_no_pop_dmsp", dataset, n_obs),
+    pct("nl_gradient_no_pop_dmsp_gpw", dataset, n_obs),
   "DMSP metric completeness (all 6 years)", "Gradient (pop. control)",
-    pct("nl_gradient_pop_dmsp", dataset, n_obs),
+    pct("nl_gradient_pop_dmsp_gpw", dataset, n_obs),
   "DMSP metric completeness (all 6 years)", "Gini coefficient",
-    pct("nl_gini_coef_dmsp", dataset, n_obs),
+    pct("nl_gini_coef_dmsp_gpw", dataset, n_obs),
   "DMSP metric completeness (all 6 years)", "Theil index",
-    pct("nl_theil_coef_dmsp", dataset, n_obs),
+    pct("nl_theil_coef_dmsp_gpw", dataset, n_obs),
 
   "VIIRS metric completeness (2015 and 2020 only)", "Gradient (no pop. control)",
-    pct("nl_gradient_no_pop_viirs", dataset_viirs, n_viirs),
+    pct("nl_gradient_no_pop_viirs_gpw", dataset_viirs, n_viirs),
   "VIIRS metric completeness (2015 and 2020 only)", "Gradient (pop. control)",
-    pct("nl_gradient_pop_viirs", dataset_viirs, n_viirs),
+    pct("nl_gradient_pop_viirs_gpw", dataset_viirs, n_viirs),
   "VIIRS metric completeness (2015 and 2020 only)", "Gini coefficient",
-    pct("nl_gini_coef_viirs", dataset_viirs, n_viirs),
+    pct("nl_gini_coef_viirs_gpw", dataset_viirs, n_viirs),
   "VIIRS metric completeness (2015 and 2020 only)", "Theil index",
-    pct("nl_theil_coef_viirs", dataset_viirs, n_viirs),
+    pct("nl_theil_coef_viirs_gpw", dataset_viirs, n_viirs),
 
   "City-level aggregates completeness", "Total luminosity, DMSP",
     pct("nl_sum_dmsp", dataset, n_obs),
   "City-level aggregates completeness", "Total luminosity, VIIRS",
     pct("nl_sum_viirs", dataset_viirs, n_viirs),
-  "City-level aggregates completeness", "Total population",
-    pct("total_pop", dataset, n_obs),
+  "City-level aggregates completeness", "Total population (GPW)",
+    pct("total_pop_gpw", dataset, n_obs),
+  "City-level aggregates completeness", "Total population (GHS-POP)",
+    pct("total_pop_ghs", dataset, n_obs),
   "City-level aggregates completeness", "Grid cell count",
     pct("n_cells", dataset, n_obs)
 )

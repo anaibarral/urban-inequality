@@ -14,7 +14,8 @@
 #
 # Input   PATHS$cells_dmsp, PATHS$cells_viirs   (step 3)
 #         PATHS$distances                       (step 2)
-# Output  PATHS$gradients_{pop,no_pop}_{dmsp,viirs}
+# Output  PATHS$gradients_{pop,no_pop}_{dmsp,viirs}       (GPW population)
+#         PATHS$gradients_{pop,no_pop}_{dmsp,viirs}_ghs   (GHS-POP population)
 #
 # One regression is run per city-year, so this is the longest step in the
 # pipeline: roughly 66,000 fits for DMSP and 22,000 for VIIRS per specification.
@@ -47,15 +48,26 @@ distances <- read_parquet(PATHS$distances)
 # 2. Estimate
 # ------------------------------------------------------------------------------
 
+# Each specification is estimated twice: with GPW population counts (column
+# pop) and with GHS-POP population counts (column pop_ghs). The population
+# enters both the cell filter (pop > 0) and, with the control, the regression.
 specifications <- list(
-  list(source = "dmsp",  cells = PATHS$cells_dmsp,  control = TRUE,
+  list(source = "dmsp",  cells = PATHS$cells_dmsp,  control = TRUE,  pop = "gpw",
        output = PATHS$gradients_pop_dmsp),
-  list(source = "dmsp",  cells = PATHS$cells_dmsp,  control = FALSE,
+  list(source = "dmsp",  cells = PATHS$cells_dmsp,  control = FALSE, pop = "gpw",
        output = PATHS$gradients_no_pop_dmsp),
-  list(source = "viirs", cells = PATHS$cells_viirs, control = TRUE,
+  list(source = "viirs", cells = PATHS$cells_viirs, control = TRUE,  pop = "gpw",
        output = PATHS$gradients_pop_viirs),
-  list(source = "viirs", cells = PATHS$cells_viirs, control = FALSE,
-       output = PATHS$gradients_no_pop_viirs)
+  list(source = "viirs", cells = PATHS$cells_viirs, control = FALSE, pop = "gpw",
+       output = PATHS$gradients_no_pop_viirs),
+  list(source = "dmsp",  cells = PATHS$cells_dmsp,  control = TRUE,  pop = "ghs",
+       output = PATHS$gradients_pop_dmsp_ghs),
+  list(source = "dmsp",  cells = PATHS$cells_dmsp,  control = FALSE, pop = "ghs",
+       output = PATHS$gradients_no_pop_dmsp_ghs),
+  list(source = "viirs", cells = PATHS$cells_viirs, control = TRUE,  pop = "ghs",
+       output = PATHS$gradients_pop_viirs_ghs),
+  list(source = "viirs", cells = PATHS$cells_viirs, control = FALSE, pop = "ghs",
+       output = PATHS$gradients_no_pop_viirs_ghs)
 )
 
 cl <- start_cluster()
@@ -63,11 +75,13 @@ on.exit(stop_cluster(cl), add = TRUE)
 
 for (spec in specifications) {
 
-  log_step(sprintf("=== %s gradients, %s population control ===",
-                   toupper(spec$source), if (spec$control) "with" else "without"))
+  log_step(sprintf("=== %s gradients, %s population control, %s population ===",
+                   toupper(spec$source), if (spec$control) "with" else "without",
+                   toupper(spec$pop)))
 
   cells <- read_parquet(spec$cells) |>
     dplyr::left_join(distances, by = c("city_id", "grid_cell_id"))
+  if (spec$pop == "ghs") cells <- dplyr::mutate(cells, pop = pop_ghs)
 
   gradients <- compute_gradients(cells, population_control = spec$control)
 
