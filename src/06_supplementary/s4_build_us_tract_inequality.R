@@ -1,7 +1,7 @@
 # ==============================================================================
-# 03_us_tract_inequality.R
+# s4_build_us_tract_inequality.R
 #
-# Supplementary Information, Section S4, step 1. Income and nightlights
+# Supplementary Information, Section S4, census input. Income and nightlights
 # inequality between census tracts, for the US urban centres of the main
 # dataset (GHS-UCDB R2019A 2015 polygons).
 #

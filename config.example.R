@@ -82,7 +82,8 @@ PATH_UCDB_2024 <- file.path(DIR_RAW, "ghsl", "GHS_UCDB_GLOBE_R2024A.gpkg")
 DIR_ACS_IPUMS <- file.path(DIR_RAW, "acs_usa_ipums")
 
 # Census microdata for the supplementary validation with Mexico and Brazil
-# (src/06_supplementary/). Needed ONLY by steps 01 and 02 of that folder; their
+# (src/06_supplementary/). Needed ONLY by s5_build_mexico_census_inequality.R and
+# s5_build_brazil_census_inequality.R; their
 # outputs are bundled in data/census_mexico/ and data/census_brazil/. Expected
 # layout (see data/README.md for the download links):
 #   DIR_CENSUS_MEXICO/inegi-censo2010/sas/viviendas_<EE>.sas7bdat
@@ -94,7 +95,7 @@ DIR_ACS_IPUMS <- file.path(DIR_RAW, "acs_usa_ipums")
 DIR_CENSUS_MEXICO <- file.path(DIR_RAW, "census_mexico")
 DIR_CENSUS_BRAZIL <- file.path(DIR_RAW, "census_brazil")
 
-# US census tracts (src/06_supplementary/03_us_tract_inequality.R, only to
+# US census tracts (src/06_supplementary/s4_build_us_tract_inequality.R, only to
 # rebuild data/census_us_tracts/): needs a free Census Data API key
 # (https://api.census.gov/data/key_signup.html) in the environment variable
 # CENSUS_API_KEY, for instance in ~/.Renviron. Do not write the key here.

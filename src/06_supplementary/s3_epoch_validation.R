@@ -1,5 +1,5 @@
 # ==============================================================================
-# table_si_epoch_validation.R
+# s3_epoch_validation.R
 #
 # Supplementary Information, Section S3: Tables 3 to 5 of the paper computed on the
 # epoch dataset (GHS-UCDB R2024A polygons of each epoch), DMSP lights and GPW

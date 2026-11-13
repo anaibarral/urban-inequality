@@ -1,5 +1,5 @@
 # ==============================================================================
-# table_si_dmsp_topcoding.R
+# s6_dmsp_topcoding.R
 #
 # Supplementary Information, Section S6: does DMSP top-coding (cells at the
 # maximum digital number, DN = 63) lower measured inequality in the brightest

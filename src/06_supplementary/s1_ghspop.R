@@ -1,5 +1,5 @@
 # ==============================================================================
-# table_si_ghspop.R
+# s1_ghspop.R
 #
 # Supplementary Information, Section S1: Tables 3 to 5 of the paper with the
 # indicators computed with GHS-POP R2023A population (dataset columns *_ghs)

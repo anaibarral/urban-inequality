@@ -1,9 +1,9 @@
 # ==============================================================================
-# 02_brazil_census_inequality.R
+# s5_build_brazil_census_inequality.R
 #
-# Supplementary validation, step 2 (Brazil). Census-based inequality of total
-# household income by municipality, and the municipality assigned to each urban
-# center of the epoch dataset.
+# Supplementary Information, Section S5, census input (Brazil). Census-based
+# inequality of total household income by municipality, and the municipality
+# assigned to each urban center of the epoch dataset.
 #
 # Input   DIR_CENSUS_BRAZIL   IBGE census sample microdata (household records) and
 #                             municipal boundaries:

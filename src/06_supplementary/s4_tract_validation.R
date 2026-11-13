@@ -1,5 +1,5 @@
 # ==============================================================================
-# table_si_tract_validation.R
+# s4_tract_validation.R
 #
 # Supplementary Information, Section S4: census-based income inequality between
 # census tracts of US urban centres against nightlights inequality.
@@ -12,7 +12,7 @@
 # observation per urban centre and year, standard errors clustered by urban
 # centre.
 #
-# Input   PATHS$us_tract_inequality   (bundled, 03_us_tract_inequality.R)
+# Input   PATHS$us_tract_inequality   (bundled, s4_build_us_tract_inequality.R)
 #         PATHS$dataset               (01_data_construction step 6)
 # Output  outputs/tables/table_si_tract_validation.csv
 #         outputs/tables/supplementary/table_si_tract_validation.tex
@@ -26,7 +26,7 @@ library(data.table)
 library(arrow)
 library(fixest)
 
-require_input(PATHS$us_tract_inequality, "06_supplementary/03_us_tract_inequality.R")
+require_input(PATHS$us_tract_inequality, "06_supplementary/s4_build_us_tract_inequality.R")
 require_input(PATHS$dataset, "01_data_construction/06_consolidate_dataset.R")
 
 tr <- fread(PATHS$us_tract_inequality)

@@ -179,9 +179,9 @@ and the codebooks of both datasets name the inputs and licence of each variable.
 | GHS Urban Centre Database R2024A | [European Commission JRC](https://human-settlement.emergency.copernicus.eu/ghs_ucdb_2024.php) | Polygons and attributes of the epoch dataset |
 | List of countries and capitals (no license applicable, bundled in `data/reference/`) | [TechSlides](http://techslides.com/list-of-countries-and-capitals) | Capital indicator, case study 1 |
 | ACS microdata | [IPUMS USA](https://usa.ipums.org/usa/) | Case study 2, step 1 only |
-| Census samples 2010, 2020 and Encuesta Intercensal 2015; ITER 2020 | [INEGI](https://www.inegi.org.mx/) | Supplementary validation for Mexico, step 1 only (output bundled) |
-| Censo Demográfico 2000 and 2010, sample microdata; municipal boundaries | [IBGE](https://www.ibge.gov.br/) | Supplementary validation for Brazil, step 2 only (output bundled) |
-| ACS 5-year detailed tables by census tract; census tract cartographic boundary files | [US Census Bureau](https://www.census.gov/data/developers/data-sets/acs-5year.html) (Census Data API, needs `CENSUS_API_KEY`) | Supplementary validation with US census tracts, step 3 only (output bundled) |
+| Census samples 2010, 2020 and Encuesta Intercensal 2015; ITER 2020 | [INEGI](https://www.inegi.org.mx/) | Supplementary Section S5 (Mexico), `s5_build_mexico_census_inequality.R` only (output bundled) |
+| Censo Demográfico 2000 and 2010, sample microdata; municipal boundaries | [IBGE](https://www.ibge.gov.br/) | Supplementary Section S5 (Brazil), `s5_build_brazil_census_inequality.R` only (output bundled) |
+| ACS 5-year detailed tables by census tract; census tract cartographic boundary files | [US Census Bureau](https://www.census.gov/data/developers/data-sets/acs-5year.html) (Census Data API, needs `CENSUS_API_KEY`) | Supplementary Section S4 (US census tracts), `s4_build_us_tract_inequality.R` only (output bundled) |
 
 Expected folder layout under `DIR_RAW`:
 

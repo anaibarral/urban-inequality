@@ -1,5 +1,5 @@
 # ==============================================================================
-# table_si_census_validation.R
+# s5_census_validation.R
 #
 # Supplementary Information, Section S5: Table 5 of the paper with census data for Mexico and
 # Brazil, on the epoch dataset (DMSP lights, GPW population).
@@ -10,8 +10,8 @@
 #            municipality covering the largest share of each urban center (IBGE)
 #
 # Input   PATHS$epoch_dataset
-#         PATHS$mexico_census                       (bundled; step 01)
-#         PATHS$brazil_census, PATHS$brazil_crosswalk (bundled; step 02)
+#         PATHS$mexico_census                       (bundled; s5_build_mexico_census_inequality.R)
+#         PATHS$brazil_census, PATHS$brazil_crosswalk (bundled; s5_build_brazil_census_inequality.R)
 # Output  outputs/tables/table_si_census_mexico_brazil.csv
 #         outputs/tables/supplementary/table_si_census_mexico_brazil.tex
 #
@@ -30,9 +30,9 @@ library(arrow)
 library(readr)
 
 require_input(PATHS$epoch_dataset, "05_epoch_dataset/05_consolidate_dataset.R")
-require_input(PATHS$mexico_census, "06_supplementary/01_mexico_census_inequality.R")
-require_input(PATHS$brazil_census, "06_supplementary/02_brazil_census_inequality.R")
-require_input(PATHS$brazil_crosswalk, "06_supplementary/02_brazil_census_inequality.R")
+require_input(PATHS$mexico_census, "06_supplementary/s5_build_mexico_census_inequality.R")
+require_input(PATHS$brazil_census, "06_supplementary/s5_build_brazil_census_inequality.R")
+require_input(PATHS$brazil_crosswalk, "06_supplementary/s5_build_brazil_census_inequality.R")
 
 epoch <- read_parquet(PATHS$epoch_dataset) |>
   dplyr::transmute(city_id_epoch_ucdb2024, year, iso_code,

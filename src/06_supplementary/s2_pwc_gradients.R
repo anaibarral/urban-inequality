@@ -1,5 +1,5 @@
 # ==============================================================================
-# table_si_pwc_gradients.R
+# s2_pwc_gradients.R
 #
 # Supplementary Information, Section S2: Tables 3 and 4 of the paper with
 # the luminosity gradients measured from the population-weighted centroid of

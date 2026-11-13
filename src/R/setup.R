@@ -122,13 +122,13 @@ PATHS <- list(
 
   # Bundled with the repository: census inequality for the supplementary
   # validation (src/06_supplementary/), built from INEGI and IBGE microdata by
-  # steps 1 and 2 of that folder.
+  # s5_build_mexico_census_inequality.R and s5_build_brazil_census_inequality.R.
   mexico_census    = here::here("data", "census_mexico", "mexico_census_inequality_epoch_ucdb2024.csv"),
   brazil_census    = here::here("data", "census_brazil", "brazil_census_inequality_by_municipality.csv"),
   brazil_crosswalk = here::here("data", "census_brazil", "crosswalk_epoch_ucdb2024_municipality.csv"),
 
   # Bundled with the repository: income and nightlights inequality between
-  # census tracts of US urban centres (src/06_supplementary/03_us_tract_inequality.R).
+  # census tracts of US urban centres (src/06_supplementary/s4_build_us_tract_inequality.R).
   us_tract_inequality = here::here("data", "census_us_tracts", "us_tract_inequality_city_year.csv")
 )
 

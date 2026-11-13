@@ -27,7 +27,7 @@ The census files for Mexico, Brazil and US census tracts feed the
 Supplementary Information (`src/06_supplementary/`).
 
 `census_us_tracts/us_tract_inequality_city_year.csv` is built by
-`src/06_supplementary/03_us_tract_inequality.R` from the ACS 5-year tables by
+`src/06_supplementary/s4_build_us_tract_inequality.R` from the ACS 5-year tables by
 census tract and the Census Bureau tract boundaries (public domain). One row
 per US urban centre and year (2010, 2015, 2020, 970 rows): `state_code`,
 `n_tracts`, the Gini and Theil of per-capita income between tracts
@@ -185,7 +185,7 @@ points at. Step 1 discovers them by scanning for `.xml`.
 
 One row per urban centre-epoch of the epoch dataset (2010, 2015, 2020) that
 contains at least one locality of 50,000 inhabitants or more. Built by
-`src/06_supplementary/01_mexico_census_inequality.R`.
+`src/06_supplementary/s5_build_mexico_census_inequality.R`.
 
 | Column | |
 |---|---|
@@ -225,7 +225,7 @@ share of its polygon (`code_muni`), its state (`state_code`) and that share
 (`share_of_polygon`). Municipal boundaries of each year from IBGE, through the
 `geobr` package.
 
-Built by `src/06_supplementary/02_brazil_census_inequality.R`.
+Built by `src/06_supplementary/s5_build_brazil_census_inequality.R`.
 
 **Source and terms.** IBGE, Censo Demográfico 2000 and 2010, microdados da
 amostra, publicly downloadable without registration from

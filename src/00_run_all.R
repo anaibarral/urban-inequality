@@ -82,12 +82,12 @@ EPOCH_SCRIPTS <- c(
 # data/census_brazil/. Step 03 (US census tracts, needs a Census Data API key)
 # is not run either: its output is bundled in data/census_us_tracts/.
 SUPPLEMENTARY_SCRIPTS <- c(
-  "src/06_supplementary/table_si_ghspop.R",
-  "src/06_supplementary/table_si_pwc_gradients.R",
-  "src/06_supplementary/table_si_epoch_validation.R",
-  "src/06_supplementary/table_si_census_validation.R",
-  "src/06_supplementary/table_si_dmsp_topcoding.R",
-  "src/06_supplementary/table_si_tract_validation.R"
+  "src/06_supplementary/s1_ghspop.R",
+  "src/06_supplementary/s2_pwc_gradients.R",
+  "src/06_supplementary/s3_epoch_validation.R",
+  "src/06_supplementary/s4_tract_validation.R",
+  "src/06_supplementary/s5_census_validation.R",
+  "src/06_supplementary/s6_dmsp_topcoding.R"
 )
 
 scripts <- switch(

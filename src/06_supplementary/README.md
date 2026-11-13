@@ -8,23 +8,25 @@ Rscript src/00_run_all.R supplementary
 
 | Script | Section | Needs |
 |---|---|---|
-| `table_si_ghspop.R` | S1. Results with GHS-POP population | main dataset (`*_ghs` columns), capital panel and ACS matched samples |
-| `table_si_pwc_gradients.R` | S2. Population-weighted centroids | main dataset (`nl_gradient_pwc_*`, step 4b) and the capital panel |
-| `table_si_epoch_validation.R` | S3. Time-varying urban boundaries | epoch dataset, bundled ACS aggregates |
-| `table_si_tract_validation.R` | S4. Census tract validation for US urban centers | main dataset, bundled tract aggregates |
-| `table_si_census_validation.R` | S5. Census validation for Mexico and Brazil | epoch dataset, bundled census aggregates |
-| `table_si_dmsp_topcoding.R` | S6. DMSP top-coding | main dataset and its cell files (step 3) |
-| `01_mexico_census_inequality.R` | builds `data/census_mexico/` | INEGI microdata (not bundled) |
-| `02_brazil_census_inequality.R` | builds `data/census_brazil/` | IBGE microdata and municipal boundaries (not bundled) |
-| `03_us_tract_inequality.R` | builds `data/census_us_tracts/` | Census tract boundaries and ACS 5-year tables (downloaded, needs `CENSUS_API_KEY`), cell files (step 3) |
+| `s1_ghspop.R` | S1. Results with GHS-POP population | main dataset (`*_ghs` columns), capital panel and ACS matched samples |
+| `s2_pwc_gradients.R` | S2. Population-weighted centroids | main dataset (`nl_gradient_pwc_*`, step 4b) and the capital panel |
+| `s3_epoch_validation.R` | S3. Time-varying urban boundaries | epoch dataset, bundled ACS aggregates |
+| `s4_build_us_tract_inequality.R` | S4, builds `data/census_us_tracts/` | Census tract boundaries and ACS 5-year tables (downloaded, needs `CENSUS_API_KEY`), cell files (step 3) |
+| `s4_tract_validation.R` | S4. Census tract validation for US urban centers | main dataset, bundled tract aggregates |
+| `s5_build_mexico_census_inequality.R` | S5, builds `data/census_mexico/` | INEGI microdata (not bundled) |
+| `s5_build_brazil_census_inequality.R` | S5, builds `data/census_brazil/` | IBGE microdata and municipal boundaries (not bundled) |
+| `s5_census_validation.R` | S5. Census validation for Mexico and Brazil | epoch dataset, bundled census aggregates |
+| `s6_dmsp_topcoding.R` | S6. DMSP top-coding | main dataset and its cell files (step 3) |
 | `latex.R` | helpers that write the tables as LaTeX | — |
 
-Files are named by content (`table_si_<section>_<table>`), not by their number
-in the document, so the order of the tables can change without renaming them.
+Scripts are named after the section of the Supplementary Information they
+serve (`s<N>_`). Output files are named by content (`table_si_<section>_<table>`),
+not by their number in the document.
 
-Steps 01 to 03 build the census inputs. Their outputs are aggregate statistics
-and ship with the repository (see `data/README.md`), so the `supplementary`
-stage does not run them. Step 03 downloads census tract boundaries (`tigris`)
+The `s<N>_build_` scripts build the census inputs. Their outputs are aggregate
+statistics and ship with the repository (see `data/README.md`), so the
+`supplementary` stage does not run them.
+`s4_build_us_tract_inequality.R` downloads census tract boundaries (`tigris`)
 and ACS 5-year tables from the Census Data API, which needs a free key in the
 environment variable `CENSUS_API_KEY`
 (https://api.census.gov/data/key_signup.html). This product uses the Census

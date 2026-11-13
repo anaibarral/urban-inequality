@@ -1,8 +1,9 @@
 # ==============================================================================
-# 01_mexico_census_inequality.R
+# s5_build_mexico_census_inequality.R
 #
-# Supplementary validation, step 1 (Mexico). Census-based inequality of
-# household labour income for the urban centers of the epoch dataset.
+# Supplementary Information, Section S5, census input (Mexico). Census-based
+# inequality of household labour income for the urban centers of the epoch
+# dataset.
 #
 # Input   DIR_CENSUS_MEXICO   INEGI census sample microdata and locality list:
 #           inegi-censo2010/sas/viviendas_<EE>.sas7bdat   Censo 2010, muestra
@@ -13,7 +14,7 @@
 # Output  PATHS$mexico_census   one row per urban center-epoch (2010, 2015, 2020)
 #
 # Only this step needs the microdata. Its output is bundled in data/census_mexico/,
-# so the validation table (table_si_census_validation.R) runs without it.
+# so the validation table (s5_census_validation.R) runs without it.
 #
 # UNIT. The household (one record per dwelling), weighted by its expansion
 # factor (FACTOR). Income is INGTRHOG, household income from work, available for
