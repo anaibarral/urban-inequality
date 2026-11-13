@@ -77,10 +77,12 @@ EPOCH_SCRIPTS <- c(
 )
 
 # Supplementary Information: all its tables and figures. Needs the main
-# and the epoch datasets. Steps 01 and 02 of the folder (census microdata) are
-# not run here: their outputs are bundled in data/census_mexico/ and
-# data/census_brazil/. Step 03 (US census tracts, needs a Census Data API key)
-# is not run either: its output is bundled in data/census_us_tracts/.
+# and the epoch datasets. The s<N>_build_ scripts of the folder are not run
+# here: s5_build_mexico_census_inequality.R and
+# s5_build_brazil_census_inequality.R (census microdata) have their outputs
+# bundled in data/census_mexico/ and data/census_brazil/, and
+# s4_build_us_tract_inequality.R (needs a Census Data API key) has its output
+# bundled in data/census_us_tracts/.
 SUPPLEMENTARY_SCRIPTS <- c(
   "src/06_supplementary/s1_ghspop.R",
   "src/06_supplementary/s2_pwc_gradients.R",
