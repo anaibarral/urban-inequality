@@ -37,14 +37,32 @@ product uses the Census Bureau Data API but is not endorsed or certified by the
 Census Bureau.
 
 `supporting_data_README.txt` documents the eight `supporting_data_*.csv` files
-deposited in the Harvard Dataverse (folder `supporting_data`): their columns,
-sources, licences and the script that builds each one. Those files are the
-deposit copies of the aggregates bundled here, plus the US state of each urban
-centre and the variables of the DMSP top-coding test.
+deposited in the Harvard Dataverse (https://doi.org/10.7910/DVN/ECLI7X, folder
+`supporting_data`): their columns, sources, licences and the script that builds
+each one. The files bundled here are kept so that a fresh clone runs without
+downloading anything. The archived, citable copies are the ones in the
+Dataverse:
 
-Both are wired into `config.example.R` as defaults, so a fresh clone runs the
-capitals case study, and the ACS case study from step 2 onward, with no extra
-downloads.
+| Bundled here | Deposit copy in the Dataverse |
+|---|---|
+| `reference/country-capitals.csv` | `supporting_data_country_capitals.csv` |
+| `acs/acs_gini_by_city.xlsx`, `acs/acs_theil_by_city.xlsx` | `supporting_data_us_acs_ipums_city_inequality.csv` |
+| `census_us_tracts/us_tract_inequality_city_year.csv` | `supporting_data_us_acs_tract_inequality.csv` |
+| `census_mexico/mexico_census_inequality_epoch_ucdb2024.csv` | `supporting_data_mexico_census_inequality.csv` |
+| `census_brazil/brazil_census_inequality_by_municipality.csv` | `supporting_data_brazil_census_inequality.csv` |
+| `census_brazil/crosswalk_epoch_ucdb2024_municipality.csv` | `supporting_data_brazil_municipality_crosswalk.csv` |
+
+The ACS deposit copy combines the Gini and Theil files in one table and leaves
+out the households outside identified cities, which no table uses. The deposit
+also includes two files with no counterpart here, because the scripts compute
+them from the dataset and the cell files: the US state of each urban centre
+(`supporting_data_us_urban_center_states.csv`) and the variables of the DMSP
+top-coding test (`supporting_data_dmsp_topcoding.csv`).
+
+The capitals list is the default of `PATH_CAPITALS` in `config.example.R`, and
+the ACS files are read through `PATHS` in `src/R/setup.R`, so a fresh clone runs
+the capitals case study, and the ACS case study from step 2 onward, with no
+extra downloads.
 
 ---
 
